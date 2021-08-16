@@ -1,0 +1,78 @@
+Questions
+-----------
+
+Where is data coming from?
+
+New changes 5/20/2021 - meeting with Andy
+------------
+
+Make sure we read enough digits from any of the files, but particularly the 
+ Probe. Name file where units of length are concerned
+
+Be able to handle shutoff between sites
+
+
+New bug
+---------
+If the files are read incorrectly on program start up, program crashes
+	- I think it's because the main window isn't up yet.
+
+
+Done
+------------
+Use only lines of pdf output - no data points - cubic spline? I don't think this is an actual problem.
+Remove 'export data file' from menu
+Remove data table from snapshot - just plots
+Add record number to data table
+Remove warnings from the data bounds limits file
+Put depths in GUI pulldown menu along with chosen probe names - done, but...
+ Would be nice to change the depths when user changes the probe name
+ Format for depth two digits
+Use 'filename' instead of the word 'snapshot' in snapshot file
+
+Add a pop up at beginning of program to save file as 
+ Use this filename as a default for next time - save name in preference file
+ Ensure overwrite protection for this data file
+Remove data directory file preference in favor of the above 
+Make sure the probe file names use depths in meters (not cm)
+Do we want automatic scrolling of the data table - data lock option, maybe?
+Make sure filename is given
+What to do if the file goes away (error messages come on ad naseum)?
+Put file suggestion in save file dialog? I don't think this is a great idea
+
+
+To Do
+-----------
+
+Find duplicate names on the probe name dialog
+Retest everything once all changes are made
+Check gradient calculations 
+
+User guide kinda sucks, also could use a .css file
+
+Comment code
+Compare to spec
+
+Add code comments, improve readability
+
+Add increased error checking 
+	bad data
+	bad files
+	bad probe names
+	bad output location(s)
+	bad gradient NaN
+
+Debug!
+
+
+
+
+
+
+
+
+
+
+
+
+

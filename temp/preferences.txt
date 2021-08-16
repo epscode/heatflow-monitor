@@ -1,0 +1,2 @@
+samplingInterval 1
+dataFilePath /Users/elimorris/Desktop/heatflow_monitor/temp

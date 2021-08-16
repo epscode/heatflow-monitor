@@ -1,0 +1,11 @@
+<taskdef name="dbk" 
+     classname="net.sourceforge.ant4docbook.taskdefs.DocbookTask" 
+     classpath="${lib.dir}/ant4docbook-0.8.0.jar"/>
+	
+	<!-- ================================================================ -->
+	<!-- docbook                                                   -->
+	<!-- Use command line arguments -Dusername=me -Dpassword=mypassword   -->
+	<!-- ================================================================ -->
+	<target name="docbook"> 
+    	<dbk file="docbook.xml" tofile="generated-html-file.html" />
+  	</target> 

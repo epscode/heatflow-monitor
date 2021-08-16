@@ -1,0 +1,45 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww10800\viewh11940\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Changes to Heatflow Monitor 8/2/2012 by Brecky Morris\
+\
+From 6.7.21-build 2408 to 8.2.21-build 2675\
+\
+I tried to fix problems as suggested and also tried to introduce some other improvements. I probably misinterpreted or botched stuff if some instances. However, at this point, I think it\'92s worth other people providing feedback. All feedback is helpful.\
+\
+Here are the specific things that I tried to change the behavior of:\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\fi714\pardirnatural\partightenfactor0
+\cf0 \'91Data Bounds\'92 name has been changed to \'91Data Alarms\'92\
+Swapped gradient calculations\
+Renamed Grad Column names\
+Reworked open / save file dialog behavior to hopefully comply with naming and behavior request\
+Fixed plot save file location behavior as requested to it\
+Changes Depth digits\
+Print / Export plot pdf tracks zoom region\
+Added an explanation abut the Data Alarm function\
+Removed the file dialog on launch\
+Tried to match the description of the behavior described in the BugReqs doc \
+Changes parsing and induced much better error handling of bad data\
+Added a status bar with gives updates on whether data lines are complete or bad\
+Added a status bar with the current read line from the data file\
+Added a intentionally corrupted file to the test data directory\
+If file is opened and read all at once, the program flags how many bad lines were read in.\
+These bad lines are also flagged by having a record number of \'910\'92\
+The bad lines are skipped in the plots also.\
+Added an Elapsed Time Clock to interface\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Known Issues\
+\
+\pard\tx699\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\fi789\pardirnatural\partightenfactor0
+\cf0 Need an official name\
+Still need clearer instructions about how I\'92ll receive data and a tech description of the data format\
+More helpful help\
+Copyright info , version number, needs to include everyone, institutions and grant numbers\
+Needs to include license - long format could go to User Manual\
+Needs a User license}

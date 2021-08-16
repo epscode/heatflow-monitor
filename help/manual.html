@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+<head>
+<style>
+
+html, body {margin:10; padding:20; height:100%; overflow-y:none;  
+	font-family: Helvetica, Arial, Sans-Serif;}
+body {
+  margin: 0;
+}
+body,
+html,
+.container {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+}
+.top {
+  background-color:#cce6ff;
+}
+.left {
+  background-color: #7CB9E8;
+  width: 25%;
+  margin:0; padding:20;
+}
+.right {
+  background-color: #e6f2ff;
+  width: 75%;
+  margin:0; padding:20;
+}
+.top,
+.content div {
+  padding: 0px;
+}
+.container,
+.content {
+  display: flex;
+}
+.container {
+  flex-direction: column;
+}
+.content {
+  overflow: hidden;
+}
+.content,
+.content div {
+  flex: 1;
+}
+.content div {
+  overflow: auto;
+}
+</style>
+</head>
+
+  <body>
+    <div class="container">
+      <div class="top">
+      <h1 style="padding-left: 30px; padding-right: 30px;">Real Time Data Display for OSU/OTIC Heat Flow System<h1>
+	  <h2 style="padding-left: 30px; padding-right: 30px;">B. Morris &amp; A. Fisher (UCSC), et al. v. 0.1, last updated 8/3/21 (B. Morris)</h2>
+      </div>
+      <div class="content">
+        <div class="left" style="padding: 20px;">
+          <h1>Table of Contents</h1>
+			<ol>
+  				<li><a href="#intro">Introduction and Purpose</a></li>
+  				<li><a href="#telemetry">Data Telemetry</a></li>
+  				<li><a href="#display">Data Display</a></li>					
+  				<li><a href="#operation">Program Operation</a></li>
+  				<li><a href="#authors"</a>Project &amp; Author Information</a></li>
+  				<li><a href="#license"</a>Software license</a></li>
+			</ol> 
+        </div>
+        <div class="right" style="padding: 20px;">
+       <h2 id="intro">I. Introduction and Purpose</h2>
+
+			<p>This document describes desired functional specification for software that will receive
+ and display data telemetered to an oceanographic vessel during operation of a 
+ multi-penetration heat flow system that is in development by a team of OSU, WHOI, 
+ and UCSC researchers and engineers.
+
+			<p>Complete data collected by the seafloor heat flow system will be stored internally on a 
+logger, recovered and processed when the system is returned to the ship. A subset of data 
+will be telemetered using a SonarDyne system that is also used for ultra-short baseline 
+(USBL) navigation. Received data will be parsed by a dedicated computer, separating 
+navigation and heat flow data. The heat flow data will arrive by serial connection 
+(we believe...detailed TBD). This document focuses on how we would like to display the 
+heat flow data once it is received on a dedicated computer.
+
+		<p>The overall approach is similar in some ways to that developed for the Alvin-style 
+heat flow probe. However, the Alvin probe is operated with a cabled serial connection 
+that allows two-way communication, probe control, and data transmission. 
+For the OSU/OTIC heat flow system, communication is by acoustic modem and is 
+probe-to-ship only. In principle we could have two- way communication and 
+probe control as part of this system, but this would require a large power draw on the 
+seafloor (supplied by batteries in a limited space) and would increase the complexity 
+of operating software on the probe.
+
+		<p>
+The operating system for the OSU/OTIC heat flow logger is described in a separate 
+document, which includes an explanation as to how the data stream to be telemetered 
+from instrument to ship will be determined. The next section of this document describes 
+data selection for telemetry, then focuses on how the data will be displayed and logged.
+
+		<h2 id="telemetry">II. Data Telemetry</h2>
+
+<p>The operator of the heat flow system will set a series of parameters in a file that is 
+accessed by the data logger on start up. Once these are set, they can be changed only by 
+restarting the heat flow probe with a different parameter file. Among the parameters set 
+for probe operation are these related to the interval for data collection and telemetry, 
+and what data are to be included in the telemetry stream.
+
+
+		<p><b>Explanations</b>
+
+		<p>- sps = n
+
+		<p>Typical time interval for sample collection by the heat flow system will be 1 to 10 s, 
+although longer sample intervals could be selected to save power, if desired. 
+
+		<p>- tps = m 
+
+		<p>This is a multiplier, determines the time interval for a subset of data to be sent to 
+the USBL unit for telemetry. For example, if sps = 2, indicating 2-second sampling by the 
+system, a value of tps = 10 would result in data sent from the logger to the USBL modem 
+every 20 seconds (2 x 10). Data going to the telemetry unit will sit in buffer until the 
+modem is "pinged" from surface and asked to send a location and data. The contents of this 
+data buffer will be replaced each time new data is sent to the modem. Thus the modem will 
+send whatever is the most recent dataset received from the logger, whether that was 1 
+second earlier or 10 seconds earlier, etc. 
+
+		<p>- This could result in an irregular data transmission interval if, for example, we ping 
+for a probe position from the ship every 30 seconds, but send data to the modem from the 
+probe every 20 seconds. To avoid this, it might be safest to set the ping interval from 
+the surface to be an integer product of sps x tps. For example, we could have data 
+logging to the file at 2 s (sps = 2), data sent to the USBL system at 10 s (tps = 5), 
+then ping from the surface at 20 s. 
+
+		<p>- The main considerations at present are (a) benefits of more frequent updates showing 
+system performance versus (b) power requirements associated with more frequent data 
+transmission. With excessively frequent data transmission, there might also be 
+interference or loss of fidelity if there are echoes. All of this will need to be sorted 
+once we know more about real-world system performance and power requirements. 
+
+		<p>- tdls =...: Data set sent to modem for transmission to surface in near-real time. 
+This should be a subset of data written to memory, using similar format.
+
+		<p>Example: tlds = DateTime, V, tilt, P, TBW, T01, T08, T15, T22 
+
+		<p>DateTime = date and time (format = YY-MM-DD hh:mm:ss,' ')
+		<p>V = system voltage (f5.2,' ')
+		<p>Tilt = angle from vertical, decimal degrees (f5.2,' ')
+		<p>- The probe logger will measure and record three-component accelerometer data. For 
+telemetry, probe will use vertical acceleration (AZ) to estimate tilt with a function 
+like tilt = degrees(arccos(AZ/g)).
+		<p>P = output of pressure gauge, converted to equivalent water depth in meters (f8.3,' ').
+		<p>- Parameter set in heat probe configuration file will include conversion factor from 
+pressure to depth = pressure/(rhow x g), where rhow = approximate water density 
+(typically ~1040 kg/m3 for oceanic depths)
+		<p>TBW = temperature of bottom water (f7.3,' ')
+		<p>TXX to TYY = temperature values for four (4) selected sensors (f7.3,' ')
+		<p>- The main probe system will record data from &GreaterEqual;11 sensors (most likely 17-18 for a 
+3.5 m lance), but only four (4) values  will be telemetered, to aid in reading the real 
+time record. 
+		<p>- Final data value to be followed by CR/NL (or LF), as appropriate
+
+		<p>Telemetry Data Storage
+		<p>As noted earlier, telemetered data is intended mainly for assessment of system status 
+during operation, and to make rough estimates of geothermal conditions that could 
+influence subsequent measurements. However, it is possible that the telemetered data will 
+be needed for quantitative assessment if the seafloor probe system is damaged. Therefore, 
+it is desired that we store a complete record of the telemetered data stream, following 
+the listing and format of data shown above. The name of the file used for shipboard 
+storage of telemetered data can be set with a parameter file and/or when the real-time 
+monitoring program is launched.
+
+		<p>FYI, an additional parameter in the probe operating software will specify the name of 
+a file that will log the data stream sent for telemetry in memory on the probe logger, 
+with a default filename = logfileUSBL.raw. This datafile will be stored in the same 
+directory/folder on the data logger as the complete data file. This "telemetry file" 
+may be useful for verifying behavior of the telemetry components and software, after 
+the full system is recovered at the end of a station. 
+
+		<h2 id="display">III. Program Display Theory</h2>
+		<p>The data display for the real time system is to be configured to show a variety 
+of information. The display screen is divided into six "data windows," a "status window" 
+to the left, a legend at the bottom and a drop-down menu at the top, as shown with this 
+draft from 4/11/21 (additional features/function in development, discussed below):
+
+		<p>Telemetry Data Storage
+As noted earlier, telemetered data is intended mainly for assessment of system status 
+during operation, and to make rough estimates of geothermal conditions that could 
+influence subsequent measurements. However, it is possible that the telemetered data 
+will be needed for quantitative assessment if the seafloor probe system is damaged. 
+Therefore, it is desired that we store a complete record of the telemetered data stream, 
+following the listing and format of data shown above. The name of the file used for 
+shipboard storage of telemetered data can be set with a parameter file and/or when the 
+real-time monitoring program is launched.
+
+		<p>FYI, an additional parameter in the probe operating software will specify the name of a 
+file that will log the data stream sent for telemetry in memory on the probe logger, with 
+a default filename = logfileUSBL.raw. This datafile will be stored in the same 
+directory/folder on the data logger as the complete data file. This "telemetry file" 
+may be useful for verifying behavior of the telemetry components and software, after the 
+full system is recovered at the end of a station.
+
+		<h2 id="operation">IV. Program Operation</h2>
+
+		<h3>Display</h3>
+
+		<h4>Status Window</h4>
+		<p>A display of the raw data line and a line which displays whether the returning
+is determined to be valid. 
+		<p>If the data is determined to be valid, the window will turn green.
+		<p>If the data is determined to be invalid, the window will turn red.
+
+		<h4>Data Window</h4>
+		<ul>
+			<li>Record - Record Number</li>
+			<li>Time Int. - Time Interval (seconds)</li>
+			<li>Probe #1 (C)</li>
+			<li>Probe #2 (C)</li>
+			<li>Probe #3 (C)</li>
+			<li>Probe #4 (C)</li>
+			<li>BW Temp - Bottom Water Temperature (C)</li>
+			<li>Depth (m) - Depth (m)</li>
+			<li>Tilt (&deg;) - Tilt (&deg;)</li>
+			<li>Batt (v) - Battery voltage (volts)</li>
+			<li>GradF (&deg;C/m) - Full Temperature Gradient (&deg;C/m)</li>
+			<li>GradU (&deg;C/m) - Upper Temperature Gradient (&deg;C/m)</li>
+			<li>GradM (&deg;C/m) - Middle Temperature Gradient (&deg;C/m)</li>
+			<li>GradL (&deg;C/m) - Lower Temperature Gradient (&deg;C/m)</li>
+		</ul>
+
+		<p>Hover over column names to get a longer description of the data names
+
+		<h4>Plot Window</h4>
+		
+		<ul>
+			<li>Record Number v. Four selected probe temperatures</li>
+			<li>Record Number v. Bottom Water probe temperature</li>
+			<li>Record Number v. Depth in meters</li>
+			<li>Record Number v. Tilt in degrees</li>
+			<li>Record Number v. Battery voltage in volts</li>
+		</ul>
+
+		<p>Zoom - Click and drag on the plot in order to zoom the area
+		<p>Right Click - right click the mouse to bring up a window with zoom out and other 
+plot options
+
+		<p>Click on Up/Down arrows between the status row and the plots to show more data in the 
+interface.
+
+		<h4>Probe Display Window</h4>
+
+		<p>Select which probes to see in the probe temperatures plots.
+
+		<h3>Menus</h3>
+
+		<h4>File - File Menu Menu Options</h4>
+
+		<ul>
+			<li>New...
+				<p>Zeros the data and opens a dialog box where the user can set the name of the file to save to.
+			</li>
+
+			<li>Open...
+				<p>Opens a saved data file from a previous data collection run.
+			</li>
+
+			<li>File Preferences...
+				<p>Set the default directory where the data files are saved to.
+			</li>
+
+			<li>Data Alarms...
+				<p>Sets the values for returning data that would trigger a visible alert on both
+			the low and high sides.
+			</li>
+
+			<li>Configure Probe Names...
+				<p>Configure the names of the heating probes.
+			</li>
+
+			<li>Export Plot As...
+				<p>Export a snapshot of the plot in pdf format to a file.
+			</li>
+
+			<li>Print...
+				<p>Print a snapshot of the plot.
+			</li>
+
+			<li>Exit
+				<p>Exit the program
+			</li>
+		</ul>
+
+	<h4>Edit - The Usual Cut &amp; paste</h4>
+	<ul>
+		<li>Cut</li>
+		<li>Copy</li>
+		<li>Paste</li>
+	</ul>
+
+	<h4>View - View which plots to view. Show / hide plots makes more space for other plots</h4>
+	<ul>
+		<li>Show / hide probe temperature plot</li>
+		<li>Show / hide bottom water probe temperature plot</li>
+		<li>Show / hide depth plot</li>
+		<li>Show / hide tilt plot</li>
+		<li>Show / hide battery voltage plot</li>
+		<li>Show / disable automatic scrolling in the data window</li>
+	</ul>
+
+	<h4>Control</h4>
+	<ul>
+		<li>Start / stop acquisition of data</li>
+	</ul>
+
+	<h4>Help</h4>
+	<ul>
+		<li>About
+			<p>Information about the program, including compile date and the build number
+		</li>
+		<li>User Guide</li>
+			<p>The guide on the theory and operation of the heat monitoring program.
+	</ul>
+
+		<h3 id="authors">Project &amp; Author Information</h3>
+		<ul>
+			<li>Brecky Morris (University of California, Santa Cruz) - brecky.morris@ucsc.edu</li>
+			<li>Andrew Fisher (University of California, Santa Cruz) - afisher@ucsc.edu </li>
+			<li>(Oregon State University)</li>
+			<li>(Woods Hole Oceanographic Institute)</li>
+		</ul>
+
+		<h3 id="license">Software License</h3>
+			<p><a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License Version 3</a>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
