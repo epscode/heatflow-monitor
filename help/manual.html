@@ -56,7 +56,7 @@ html,
     <div class="container">
       <div class="top">
       <h1 style="padding-left: 30px; padding-right: 30px;">Real Time Data Display for OSU/OTIC Heat Flow System<h1>
-	  <h2 style="padding-left: 30px; padding-right: 30px;">B. Morris &amp; A. Fisher (UCSC), et al. v. 0.1, last updated 8/3/21 (B. Morris)</h2>
+	  <h2 style="padding-left: 30px; padding-right: 30px;">B. Morris &amp; A. Fisher (UCSC), et al. v. 0.1, last updated 8/30/21 (B. Morris)</h2>
       </div>
       <div class="content">
         <div class="left" style="padding: 20px;">
@@ -151,11 +151,11 @@ This should be a subset of data written to memory, using similar format.
 		<p>Tilt = angle from vertical, decimal degrees (f5.2,' ')
 		<p>- The probe logger will measure and record three-component accelerometer data. For 
 telemetry, probe will use vertical acceleration (AZ) to estimate tilt with a function 
-like tilt = degrees(arccos(AZ/g)).
+like <math>tilt = (180/&pi;)(Cos<sup>-1</sup>(AZ/g))</math>.
 		<p>P = output of pressure gauge, converted to equivalent water depth in meters (f8.3,' ').
 		<p>- Parameter set in heat probe configuration file will include conversion factor from 
-pressure to depth = pressure/(rhow x g), where rhow = approximate water density 
-(typically ~1040 kg/m3 for oceanic depths)
+pressure to <math>depth = pressure/(&rho; &times; g)</math>, where &rho; = approximate water density 
+(typically ~1040 kg/m<sup>3</sup> for oceanic depths)
 		<p>TBW = temperature of bottom water (f7.3,' ')
 		<p>TXX to TYY = temperature values for four (4) selected sensors (f7.3,' ')
 		<p>- The main probe system will record data from &GreaterEqual;11 sensors (most likely 17-18 for a 
@@ -182,11 +182,28 @@ the full system is recovered at the end of a station.
 
 		<h2 id="display">III. Program Display Theory</h2>
 		<p>The data display for the real time system is to be configured to show a variety 
-of information. The display screen is divided into six "data windows," a "status window" 
-to the left, a legend at the bottom and a drop-down menu at the top, as shown with this 
-draft from 4/11/21 (additional features/function in development, discussed below):
+of information. The display screen is divided into a series of windows described below:
+<b>The right hand side column:</b>
+<ul>
+<li><b>Status:</b> Latest data and text describing whether it is well-formed or not.</li>
+<li><b>Data:</b> Table showing the data</li>
+<li><b>Plots:</b> Plots showing the data vs. the record number</li>
+	<ul>
+		<li><b>Probe Temperature (C):</b>The four temperature probe temperatures in Celsius</li>
+		<li><b>BW Temperature (C):</b> Bottom water temperature in Celsius</li>
+		<li><b>Depth (m):</b> The depth of the probe in meters</li>
+		<li><b>Tilt (&deg;):</b> The tilt of the probe in degrees</li>
+		<li><b>Batt (V):</b> The battery voltage in volts</li>
+	</ul>
+	<b>The left hand side column:</b>
+	<ul>
+		<li><b>Elapsed Time:</b> The elapsed time from a new file was started</li>
+		<li><b>Temperature Probe Selection:</b> Select which temperature probe traces to display</li>	
+	</ul>
+</ul>
 
-		<p>Telemetry Data Storage
+
+	<p>Telemetry Data Storage
 As noted earlier, telemetered data is intended mainly for assessment of system status 
 during operation, and to make rough estimates of geothermal conditions that could 
 influence subsequent measurements. However, it is possible that the telemetered data 
@@ -196,7 +213,7 @@ following the listing and format of data shown above. The name of the file used 
 shipboard storage of telemetered data can be set with a parameter file and/or when the 
 real-time monitoring program is launched.
 
-		<p>FYI, an additional parameter in the probe operating software will specify the name of a 
+	<p>FYI, an additional parameter in the probe operating software will specify the name of a 
 file that will log the data stream sent for telemetry in memory on the probe logger, with 
 a default filename = logfileUSBL.raw. This datafile will be stored in the same 
 directory/folder on the data logger as the complete data file. This "telemetry file" 
@@ -205,15 +222,18 @@ full system is recovered at the end of a station.
 
 		<h2 id="operation">IV. Program Operation</h2>
 
-		<h3>Display</h3>
+		<h3>Display</h3>	
+		<img src="interface_with_data.png" width="500" height="600">
 
 		<h4>Status Window</h4>
+		<img src="interface_with_data_status.png" width="500" height="600">
 		<p>A display of the raw data line and a line which displays whether the returning
 is determined to be valid. 
 		<p>If the data is determined to be valid, the window will turn green.
 		<p>If the data is determined to be invalid, the window will turn red.
 
 		<h4>Data Window</h4>
+		<img src="interface_with_data_text.png" width="500" height="600">
 		<ul>
 			<li>Record - Record Number</li>
 			<li>Time Int. - Time Interval (seconds)</li>
@@ -234,6 +254,7 @@ is determined to be valid.
 		<p>Hover over column names to get a longer description of the data names
 
 		<h4>Plot Window</h4>
+		<img src="interface_with_data_plots.png" width="500" height="600">
 		
 		<ul>
 			<li>Record Number v. Four selected probe temperatures</li>
@@ -253,10 +274,14 @@ interface.
 		<h4>Probe Display Window</h4>
 
 		<p>Select which probes to see in the probe temperatures plots.
-
+		<img src="interface_with_data_select.png" width="500" height="600">
+		
+		<p>Elapsed Time from the start of this file.
+		<img src="interface_with_data_time.png" width="500" height="600">
 		<h3>Menus</h3>
 
 		<h4>File - File Menu Menu Options</h4>
+		<img src="file_menu.png" width="500" height="600">
 
 		<ul>
 			<li>New...
@@ -294,6 +319,8 @@ interface.
 		</ul>
 
 	<h4>Edit - The Usual Cut &amp; paste</h4>
+	<img src="edit_menu.png" width="500" height="600">
+	
 	<ul>
 		<li>Cut</li>
 		<li>Copy</li>
@@ -301,6 +328,7 @@ interface.
 	</ul>
 
 	<h4>View - View which plots to view. Show / hide plots makes more space for other plots</h4>
+	<img src="view_menu.png" width="500" height="600">
 	<ul>
 		<li>Show / hide probe temperature plot</li>
 		<li>Show / hide bottom water probe temperature plot</li>
@@ -311,11 +339,14 @@ interface.
 	</ul>
 
 	<h4>Control</h4>
+	<img src="control_menu.png" width="500" height="600">
+	
 	<ul>
 		<li>Start / stop acquisition of data</li>
 	</ul>
 
 	<h4>Help</h4>
+	<img src="help_menu.png" width="500" height="600">
 	<ul>
 		<li>About
 			<p>Information about the program, including compile date and the build number
@@ -333,8 +364,7 @@ interface.
 		</ul>
 
 		<h3 id="license">Software License</h3>
-			<p><a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License Version 3</a>
-
+			<p><a href="gpl.html">GNU General Public License Version 3</a>
         </div>
       </div>
     </div>

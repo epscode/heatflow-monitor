@@ -417,7 +417,7 @@ public class Monitor extends JFrame implements WindowListener {
 		
 		// tilt plot
 		XYItemRenderer tiltRenderer = new StandardXYItemRenderer(); 
-		NumberAxis tiltRange = new NumberAxis("Tilt (&deg;)");
+		NumberAxis tiltRange = new NumberAxis("Tilt (deg)");
 		tiltRange.setLabelPaint(Color.white);
     	tiltRange.setTickLabelPaint(Color.white);
 		tiltPlot = new XYPlot(heatingData.generateTiltData(), null, 
