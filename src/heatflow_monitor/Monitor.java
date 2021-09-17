@@ -385,10 +385,10 @@ public class Monitor extends JFrame implements WindowListener {
 		((AbstractRenderer) temperatureRenderer).setAutoPopulateSeriesStroke(false);
 		temperatureRange.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
 		temperatureRange.setAutoRangeIncludesZero(false);
-		temperatureRenderer.setSeriesPaint(0, new Color(255, 255, 0)); 	// red
-		temperatureRenderer.setSeriesPaint(1, new Color(255, 0 ,0)); 	// yellow
-		temperatureRenderer.setSeriesPaint(2, new Color(0, 0, 255)); 	// blue
-		temperatureRenderer.setSeriesPaint(3, new Color(0, 204, 0)); 	// green
+		temperatureRenderer.setSeriesPaint(0, Color.red); 
+		temperatureRenderer.setSeriesPaint(1, Color.orange);
+		temperatureRenderer.setSeriesPaint(2, new Color(0, 0, 255));
+		temperatureRenderer.setSeriesPaint(3, new Color(0, 204, 0));
 		temperaturePlot.setBackgroundPaint(Color.black);
 		
         // base temp plot
@@ -861,22 +861,22 @@ public class Monitor extends JFrame implements WindowListener {
     void plottingDisplay() {
     
     	// temperatures plot     
-		XYItemRenderer temperatureRendererPrint = new StandardXYItemRenderer(); 
+		XYItemRenderer temperatureRenderer = new StandardXYItemRenderer(); 
 		NumberAxis temperatureRange = new NumberAxis("Probe Temps (C)");
 		temperatureRange.setLabelPaint(Color.white);
     	temperatureRange.setTickLabelPaint(Color.white);
 		XYPlot temperaturePlot = new XYPlot(heatingData.generateTemperatureData(), null, 
 		 temperatureRange, temperatureRenderer); 
 		temperaturePlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		temperatureRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		temperatureRendererPrint.setBaseStroke(new BasicStroke(2.0f));
+		temperatureRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		temperatureRenderer.setBaseStroke(new BasicStroke(2.0f));
 		((AbstractRenderer) temperatureRenderer).setAutoPopulateSeriesStroke(false);
 		temperatureRange.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
 		temperatureRange.setAutoRangeIncludesZero(false);
-		temperatureRenderer.setSeriesPaint(0, new Color(255, 255, 0)); 	// red
-		temperatureRenderer.setSeriesPaint(1, new Color(255, 0 ,0)); 	// yellow
-		temperatureRenderer.setSeriesPaint(2, new Color(0, 0, 255)); 	// blue
-		temperatureRenderer.setSeriesPaint(3, new Color(0, 204, 0)); 	// green
+		temperatureRenderer.setSeriesPaint(0, Color.red); 
+		temperatureRenderer.setSeriesPaint(1, Color.orange);
+		temperatureRenderer.setSeriesPaint(2, new Color(0, 0, 255));
+		temperatureRenderer.setSeriesPaint(3, new Color(0, 204, 0));
 		temperaturePlot.setBackgroundPaint(Color.black);
 		
         // base temp plot
@@ -1579,8 +1579,8 @@ public class Monitor extends JFrame implements WindowListener {
 		logger.info("get probe3 name: " + HeatProbeNames.getProbe3Name());
 		logger.info("get probe4 name: " + HeatProbeNames.getProbe4Name());
 		
-		probe1Checkbox.setText(("<html><font color='yellow'>&#8212;</font>" + HeatProbeNames.getProbe1Name() + "</html>"));
-		probe2Checkbox.setText(("<html><font color='red'>&#8212;</font>" + HeatProbeNames.getProbe2Name() + "</html>"));
+		probe1Checkbox.setText(("<html><font color='red'>&#8212;</font>" + HeatProbeNames.getProbe1Name() + "</html>"));
+		probe2Checkbox.setText(("<html><font color='orange'>&#8212;</font>" + HeatProbeNames.getProbe2Name() + "</html>"));
 		probe3Checkbox.setText(("<html><font color='blue'>&#8212;</font>" + HeatProbeNames.getProbe3Name() + "</html>"));
 		probe4Checkbox.setText(("<html><font color='green'>&#8212;</font>" + HeatProbeNames.getProbe4Name()  + "</html>"));
 		
@@ -1654,12 +1654,11 @@ public class Monitor extends JFrame implements WindowListener {
 			((AbstractRenderer) temperatureRendererPrint).setAutoPopulateSeriesStroke(false);
 			temperatureRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
 			temperatureRangePrint.setAutoRangeIncludesZero(false);
-			temperatureRendererPrint.setSeriesPaint(0, new Color(255, 255, 0)); // red
-			// temperatureRendererPrint.setSeriesPaint(1, new Color(255, 0 ,0)); 	// yellow
-			// temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255)); 	// blue
-			// temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0)); 	// green
+			temperatureRendererPrint.setSeriesPaint(0, Color.red); 
+			temperatureRendererPrint.setSeriesPaint(1, Color.orange);
+			temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255));
+			temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0));
 			
-    		
 			// base temp plot
 			NumberAxis baseTempRangePrint = new NumberAxis("BW Temp (C)");
 			XYItemRenderer baseTempRendererPrint = new StandardXYItemRenderer(); 

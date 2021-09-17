@@ -1,4 +1,4 @@
-list of changes to Heatflow Monitor 9/15/21
+list of changes to Heatflow Monitor 9/17/21
 ---------------
 
 -adjusted color on the status text window to be softer colors for ease of reading text messages.
@@ -12,6 +12,9 @@ messages every time a new line was written. Now one just gets a single error mes
 -Fixed a bug where the debug log configuration file wasn't defined properly and 
 when the program was run from the command line 'java - jar heatflow_monitor.jar'
 or by double-clicking on  it, the logger didn't work.
+-Fixed HOPEFULLY all of the library problems where some functions fail out with Java errors
+-Fixed colors of plots so they are readable on black and white backgrounds and colors are consistent with screen and printed versions
+-Fixed names of probes in printed plots from generic names to the actual names of probes
 
 
 

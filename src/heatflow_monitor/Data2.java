@@ -139,7 +139,7 @@ public class Data2 {
 	
 		temperatureDataset = new XYSeriesCollection();
 		
-		probe1Series = new XYSeries("Probe 1");
+		probe1Series = new XYSeries("Probe 1"); 
 		probe2Series = new XYSeries("Probe 2");
 		probe3Series = new XYSeries("Probe 3");
 		probe4Series = new XYSeries("Probe 4");
@@ -163,14 +163,14 @@ public class Data2 {
         return temperatureDataset;
     }
     
-    public XYSeriesCollection generateTemperatureDataPrint() {
+    public XYSeriesCollection generateTemperatureDataPrint() {  
 	
 		temperatureDatasetPrint = new XYSeriesCollection();
 		
-		probe1SeriesPrint = new XYSeries("Probe 1");
-		probe2SeriesPrint = new XYSeries("Probe 2");
-		probe3SeriesPrint = new XYSeries("Probe 3");
-		probe4SeriesPrint = new XYSeries("Probe 4");
+		probe1SeriesPrint = new XYSeries(HeatProbeNames.getProbe1Name());
+		probe2SeriesPrint = new XYSeries(HeatProbeNames.getProbe2Name());
+		probe3SeriesPrint = new XYSeries(HeatProbeNames.getProbe3Name());
+		probe4SeriesPrint = new XYSeries(HeatProbeNames.getProbe4Name());
 	
 		System.out.println("heat flow size from generateTemperatureDataPrint: " + getHeatflowSize() );
 		
