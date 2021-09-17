@@ -55,9 +55,9 @@ public class MessagesPanel extends JPanel {
 	public void setErrorCondition(boolean ifError) {
 	
 		if (ifError) {
-			messagesArea.setBackground(Color.RED);
+			messagesArea.setBackground(new Color (255,114,118)); // Color.RED
 		} else {
-			messagesArea.setBackground(new Color(0, 153, 0) );
+			messagesArea.setBackground(new Color (152,251,152)); // new Color(0, 153, 0) );
 
 
 		}

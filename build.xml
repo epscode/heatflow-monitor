@@ -11,6 +11,7 @@
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="dist.dir" value="${basedir}/dist" />
 	<property name="log.dir" value="${basedir}/logs" />
+    <property name="logconfig.dir" value="${basedir}/logconfig" />
 	<property name="heatflow_monitor.dir" value="${basedir}/src/heatflow_monitor" />
 	<property name="jar" value="jar" />
 	<property name="run" value="run" />
@@ -60,6 +61,12 @@
 			<include name="*.class"/>
 		</fileset>
 	</path>
+    
+    <path id="logconfig">
+        <fileset dir="${logconfig.dir}">
+            <include name="*.xml"/>
+        </fileset>
+    </path>
 
 	<!-- convert the libraries to be included in the 
 	Class-Path attribute of the MANIFEST.MF file -->

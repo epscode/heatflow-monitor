@@ -1,0 +1,7 @@
+
+no file appender - only when the program isn't built i.e. java -jar heatMonitor.jar
+
+show data and better error if parse error is triggered
+
+figure out what happens with the temp plot to the main plot when a pdf is made - 
+put purposely removed data in the plot

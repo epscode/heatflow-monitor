@@ -70,18 +70,11 @@ class FetchData {
         	System.out.println("Is this causing a problem?");
         	heatingData.calculateElapsedTime();
         	
-        	
         	System.out.println("elapsed time: " + heatingData.calculateElapsedTime());
         	
 			elapsedTimeLabelVal.setText(heatingData.calculateElapsedTime() );
-			
-			
         	statusPanel.addDatarow();
-        	
-        	
-        	
-        	statusPanel.setProbeStates();
-        	
+        	statusPanel.setProbeStates();	
     	}
 	};
 	

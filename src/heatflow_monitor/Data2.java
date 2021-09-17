@@ -172,15 +172,30 @@ public class Data2 {
 		probe3SeriesPrint = new XYSeries("Probe 3");
 		probe4SeriesPrint = new XYSeries("Probe 4");
 	
+		System.out.println("heat flow size from generateTemperatureDataPrint: " + getHeatflowSize() );
+		
         for (int index = 0; index < getHeatflowSize(); index++) {
         
-        	probe1Series.add(index, getHeatflowDatum(index).getProbe1Temp());
-        	probe2Series.add(index, getHeatflowDatum(index).getProbe2Temp());
-        	probe3Series.add(index, getHeatflowDatum(index).getProbe3Temp());
-        	probe4Series.add(index, getHeatflowDatum(index).getProbe4Temp());
+        	int record = getHeatflowDatum(index).getRecord();
+        
+        	if (record != -1) {
+        	
+        		System.out.println("probe 1 temp: " + getHeatflowDatum(index).getProbe1Temp() );
+        		logger.info("probe 1 temp: " + getHeatflowDatum(index).getProbe1Temp() );
+        		
+        		probe1SeriesPrint.add(index, getHeatflowDatum(index).getProbe1Temp());
+        		probe2SeriesPrint.add(index, getHeatflowDatum(index).getProbe2Temp());
+        		probe3SeriesPrint.add(index, getHeatflowDatum(index).getProbe3Temp());
+        		probe4SeriesPrint.add(index, getHeatflowDatum(index).getProbe4Temp());
+        	}
         }
         
-        return temperatureDataset;
+        temperatureDatasetPrint.addSeries(probe1SeriesPrint);
+        temperatureDatasetPrint.addSeries(probe2SeriesPrint);
+        temperatureDatasetPrint.addSeries(probe3SeriesPrint);
+        temperatureDatasetPrint.addSeries(probe4SeriesPrint);
+        
+        return temperatureDatasetPrint;
     }
     
      public XYDataset generateBaseTempData() {
@@ -205,7 +220,14 @@ public class Data2 {
         baseTempSeriesPrint = new XYSeries("BW Temp");
         
         for (int index = 0; index < getHeatflowSize(); index++) {
-        	baseTempSeriesPrint.add(index, getHeatflowDatum(index).getBaseTemp());
+        
+        	int record = getHeatflowDatum(index).getRecord();
+        
+        	System.out.println("base temp record: " + record);
+        	
+        	if (record != -1) {
+        		baseTempSeriesPrint.add(index, getHeatflowDatum(index).getBaseTemp());
+        	}
         }
 		
         baseTempDatasetPrint.addSeries(baseTempSeriesPrint);
@@ -235,7 +257,12 @@ public class Data2 {
         depthSeriesPrint = new XYSeries("Depth");
         
         for (int index = 0; index < getHeatflowSize(); index++) {
-        	depthSeriesPrint.add(index, getHeatflowDatum(index).getDepth());
+        
+        	int record = getHeatflowDatum(index).getRecord();
+        
+        	if (record != -1) {
+        		depthSeriesPrint.add(index, getHeatflowDatum(index).getDepth());
+        	}
         }
         
         depthDatasetPrint.addSeries(depthSeriesPrint);
@@ -265,7 +292,12 @@ public class Data2 {
     	tiltSeriesPrint = new XYSeries("Tilt");
     	
     	for (int index = 0; index < getHeatflowSize(); index++) {
-        	tiltSeriesPrint.add(index, getHeatflowDatum(index).getTilt());
+    	
+    		int record = getHeatflowDatum(index).getRecord();
+    	
+    		if (record != -1) {
+        		tiltSeriesPrint.add(index, getHeatflowDatum(index).getTilt());
+        	}
         }
     	
         tiltDatasetPrint.addSeries(tiltSeriesPrint);
@@ -295,7 +327,12 @@ public class Data2 {
         batterySeriesPrint = new XYSeries("Battery");
         
         for (int index = 0; index < getHeatflowSize(); index++) {
-        	batterySeriesPrint.add(index, getHeatflowDatum(index).getBattery());
+        
+        	int record = getHeatflowDatum(index).getRecord();
+        
+        	if (record != -1) {
+        		batterySeriesPrint.add(index, getHeatflowDatum(index).getBattery());
+        	}
         }
         
         batteryDatasetPrint.addSeries(batterySeriesPrint);
@@ -352,8 +389,6 @@ public class Data2 {
 			 	 TimeUnit.MILLISECONDS.toSeconds(diffInMillies) - 
 			 	 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(diffInMillies)));
 			}
-		
-			
 		}
     	
     	return timeString;
@@ -387,7 +422,7 @@ public class Data2 {
 	public void printDataLineToLog() {
 	
 		logger.info("trying to print data line: " + linesAlreadyRead);
-		System.out.println("trying to print data line: " + linesAlreadyRead);	
+		// System.out.println("trying to print data line: " + linesAlreadyRead);	
 		
 		logger.info("record: " + heatflowData.elementAt(linesAlreadyRead - 1).getRecord());
 		logger.info("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
@@ -399,6 +434,7 @@ public class Data2 {
 		logger.info("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
 		logger.info("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
 		
+		/*
 		System.out.println("trying to print data line: " + linesAlreadyRead);	
 		System.out.println("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
 		System.out.println("tilt: " + heatflowData.elementAt(linesAlreadyRead - 1).getTilt());
@@ -408,6 +444,7 @@ public class Data2 {
 		System.out.println("temp2: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe2Temp());
 		System.out.println("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
 		System.out.println("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
+		*/
 	}
 	
 	public void readDataLine() {
@@ -515,8 +552,11 @@ public class Data2 {
 					
 						heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
 					
-						String message = "Number format problem reading the input " + 
-					 	 " Exception: " + error;
+						// String message = "Number format problem reading the input " + 
+					 	//  " Exception: " + error;
+					 	
+					 	String message = line + "\n" +
+					 	 "Couldn't parse the input line";
 					 	 
 					 	logger.info(message);
 					 	
@@ -531,8 +571,11 @@ public class Data2 {
 					
 						heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
 				
-						String message = "Parse error reading the input " + 
-					 	 " Exception: " + error;
+						// String message = "Parse error reading the input " + 
+					 	//  " Exception: " + error;
+					 	
+					 	String message = line + "\n" +
+					 	 "Couldn't parse the input line";
 					 	 
 					 	logger.info(message);
 					 	
@@ -545,8 +588,11 @@ public class Data2 {
 					
 						heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
 					
-						String message = "Parse error reading the input " +
-						 " Exception: " + error;
+						// String message = "Parse error reading the input " +
+						//  " Exception: " + error;
+						 
+						String message = line + "\n" +
+					 	 "Couldn't parse the input line";
 						  
 						logger.info(message);
 						
@@ -583,7 +629,7 @@ public class Data2 {
 	public void readDatafile(String filename, boolean newFile) {
 	 
 		String fullFilename = filename;
-		logger.info("trying to read the data file: " + fullFilename);
+		logger.info("trying to read the data file (affirm): " + fullFilename);
 		
 		int errors = 0;
 		messagesPanel.setErrorCondition(false);
@@ -649,7 +695,8 @@ public class Data2 {
 					depthSeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getDepth());
 					tiltSeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getTilt());
 					batterySeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getBattery());
-			
+					
+					/*
 					// for the plot states
 					DataStates.determineProbe1TempStatus(getHeatflowDatum(lineNumber).getProbe1Temp());
 					DataStates.determineProbe2TempStatus(getHeatflowDatum(lineNumber).getProbe2Temp());
@@ -664,6 +711,7 @@ public class Data2 {
 					
 					messagesPanel.setErrorCondition(false);
 					messagesPanel.addStatus("Data is complete");
+					*/
 				
 				} catch (NumberFormatException error) {
 				
@@ -1153,6 +1201,25 @@ public class Data2 {
 		temperatureDataset.addSeries(probe4Series);
 	}
 	
+	public void zeroWritingDatafile() {
+		String fullFilename = Preferences.getDataFilename();
+		logger.debug("trying to write the test data file: " + fullFilename);
+		
+		try {	
+			FileWriter dataWriter = new FileWriter(fullFilename, false); // should start new file
+			PrintWriter dataPrinter = new PrintWriter(dataWriter, true);
+			
+			dataPrinter.close();
+			dataWriter.close();
+		} catch (IOException error) {
+		
+			logger.error("can't open file for saving: " + error);
+
+			JOptionPane.showMessageDialog(null, "Error saving file " + fullFilename, "File Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	public void writeDatafileLine(String filename, int lineNumber) {
 	
 		// String fullFilename = baseFilePath + "/saveddata/" + filename;
@@ -1173,8 +1240,8 @@ public class Data2 {
 		
 			logger.error("can't open file for saving: " + error);
 
-			JOptionPane.showMessageDialog(null, "Error saving file " + fullFilename, "File Error",
-					JOptionPane.ERROR_MESSAGE);
+			// JOptionPane.showMessageDialog(null, "Error saving file " + fullFilename, "File Error",
+			//		JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

@@ -111,6 +111,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import org.apache.log4j.PropertyConfigurator;
+
 // create pdf
 import com.itextpdf.kernel.pdf.*;
 import com.itextpdf.layout.Document;
@@ -138,10 +140,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
-
 import javax.swing.plaf.basic.BasicMenuBarUI;
-
 
 import java.util.Vector;
 
@@ -318,14 +317,23 @@ public class Monitor extends JFrame implements WindowListener {
 	String sciNotationPattern = "0.000E0";
 	DecimalFormat sciNotationaformatter = new DecimalFormat(sciNotationPattern);
 	
-	double lowerBoundTempPlot = 0.0;
-	double upperBoundTempPlot = 0.0;
+	// double lowerBoundTempPlot = 0.0;
+	// double upperBoundTempPlot = 0.0;
 	
 	NumberAxis recordsRange;
 	
 	MessagesPanel messagesPanel;
 
     private void init() {
+    
+    	//PropertiesConfigurator is used to configure logger from properties file
+        // PropertyConfigurator.configure("log4j.xml");
+        
+        //DOMConfigurator is used to configure logger from xml configuration file
+        DOMConfigurator.configure("log4j.xml");
+ 
+        //Log in console in and log file
+        logger.debug("Log4j appender configuration is successful!");
     
     	// File Paths
     	File baseFileObject = new File("");
@@ -518,9 +526,6 @@ public class Monitor extends JFrame implements WindowListener {
 		elapsedTimeLabel.setBorder(empty);
 		elapsedTimeLabelVal.setBorder(empty);
 		
-		
-		
-		
 		probeChooserPanel.add(elapsedTimeLabel);
 		probeChooserPanel.add(elapsedTimeLabelVal);
 		probeChooserPanel.add(probe1Checkbox);
@@ -551,9 +556,6 @@ public class Monitor extends JFrame implements WindowListener {
 				probe4Checkbox_actionPerformed(e);
 			}
 		});
-		
-		
-
 		
         probe1Checkbox.setSelected(true);
         probe2Checkbox.setSelected(true);
@@ -695,7 +697,7 @@ public class Monitor extends JFrame implements WindowListener {
 		});
 		
 		// Export plot file 
-		jMenuFileExportPlot.setText("Export Plot As...");
+		jMenuFileExportPlot.setText("Export PDF Plot As...");
 		jMenuFileExportPlot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				jMenuFileExportPlot_actionPerformed(e);
@@ -864,7 +866,7 @@ public class Monitor extends JFrame implements WindowListener {
 		temperatureRange.setLabelPaint(Color.white);
     	temperatureRange.setTickLabelPaint(Color.white);
 		XYPlot temperaturePlot = new XYPlot(heatingData.generateTemperatureData(), null, 
-		 temperatureRange, temperatureRendererPrint); 
+		 temperatureRange, temperatureRenderer); 
 		temperaturePlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 		temperatureRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 		temperatureRendererPrint.setBaseStroke(new BasicStroke(2.0f));
@@ -947,8 +949,8 @@ public class Monitor extends JFrame implements WindowListener {
 		recordsRangePrint.setLabelPaint(Color.white);
     	recordsRangePrint.setTickLabelPaint(Color.white);
     	
-    	lowerBoundTempPlot = recordsRange.getLowerBound();
-		upperBoundTempPlot = recordsRange.getUpperBound();
+    	double lowerBoundTempPlot = recordsRange.getLowerBound();
+		double upperBoundTempPlot = recordsRange.getUpperBound();
 			
 		logger.info("lowerbound print:" + lowerBoundTempPlot);
     	logger.info("upperbound print:" + upperBoundTempPlot);
@@ -1059,6 +1061,7 @@ public class Monitor extends JFrame implements WindowListener {
 		
 		heatingData.clearAllData();
 		statusPanel.clearData();
+		// heatingData.zeroWritingDatafile(); // try this next test
 		
 		heatingData.zeroLinesAlreadyRead();
 		
@@ -1398,6 +1401,12 @@ public class Monitor extends JFrame implements WindowListener {
 			Preferences.dataFilePath = parentPath;
 			Preferences.writePreferencesFile(tempPath);
 			
+			heatingData.clearAllData();
+			statusPanel.clearData();
+			heatingData.zeroWritingDatafile(); // try this next test
+		
+			heatingData.zeroLinesAlreadyRead();
+			
 			jMenuControlStart.setEnabled(true);
 
 			return true;
@@ -1623,13 +1632,22 @@ public class Monitor extends JFrame implements WindowListener {
 	
 		try {
 		
-			logger.info("trying to save the plot to a file: " + plotFilename);
-		
-			// temperatures plot     
-			XYItemRenderer temperatureRendererPrint = new StandardXYItemRenderer(); 
+			logger.info("trying to save the plot to a file (2): " + plotFilename);
+	
+			// temperatures plot
 			NumberAxis temperatureRangePrint = new NumberAxis("Probe Temps (C)");
+			XYItemRenderer temperatureRendererPrint = new StandardXYItemRenderer(); 
+			
+			
+			// XYPlot temperaturePlotPrint = new XYPlot(heatingData.generateTemperatureDataPrint(), 
+			// null, temperatureRangePrint, temperatureRendererPrint);
+			 
 			XYPlot temperaturePlotPrint = new XYPlot(heatingData.generateTemperatureDataPrint(), 
 			 null, temperatureRangePrint, temperatureRendererPrint); 
+			 
+			temperaturePlotPrint.setBackgroundPaint(Color.white);
+			temperatureRangePrint.setLabelPaint(Color.black);
+    		temperatureRangePrint.setTickLabelPaint(Color.black);
 			temperaturePlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 			temperatureRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
 			temperatureRendererPrint.setBaseStroke(new BasicStroke(1.0f));
@@ -1637,12 +1655,10 @@ public class Monitor extends JFrame implements WindowListener {
 			temperatureRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
 			temperatureRangePrint.setAutoRangeIncludesZero(false);
 			temperatureRendererPrint.setSeriesPaint(0, new Color(255, 255, 0)); // red
-			temperatureRendererPrint.setSeriesPaint(1, new Color(255, 0 ,0)); 	// yellow
-			temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255)); 	// blue
-			temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0)); 	// green
-			temperaturePlotPrint.setBackgroundPaint(Color.white);
-			temperatureRangePrint.setLabelPaint(Color.black);
-    		temperatureRangePrint.setTickLabelPaint(Color.black);
+			// temperatureRendererPrint.setSeriesPaint(1, new Color(255, 0 ,0)); 	// yellow
+			// temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255)); 	// blue
+			// temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0)); 	// green
+			
     		
 			// base temp plot
 			NumberAxis baseTempRangePrint = new NumberAxis("BW Temp (C)");
@@ -1663,7 +1679,7 @@ public class Monitor extends JFrame implements WindowListener {
 			XYItemRenderer depthRendererPrint = new StandardXYItemRenderer(); 
 			NumberAxis depthRangePrint = new NumberAxis("Depth (m)");
 			XYPlot depthPlotPrint = new XYPlot(heatingData.generateDepthDataPrint(), null, 
-			depthRangePrint, depthRendererPrint); 
+			 depthRangePrint, depthRendererPrint); 
 			depthRangePrint.setNumberFormatOverride(oneDecimalFormatter); // set decimal format
 			depthPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 			depthRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
@@ -1705,8 +1721,8 @@ public class Monitor extends JFrame implements WindowListener {
 			NumberAxis recordsRangePrint = new NumberAxis("Record");
 			recordsRangePrint.setNumberFormatOverride(zeroDecimalFormatter); // set decimal format
     		
-    		lowerBoundTempPlot = recordsRange.getLowerBound();
-			upperBoundTempPlot = recordsRange.getUpperBound();
+    		double lowerBoundTempPlot = recordsRange.getLowerBound();
+			double upperBoundTempPlot = recordsRange.getUpperBound();
 			
 			logger.info("lowerbound print:" + lowerBoundTempPlot);
     		logger.info("upperbound print:" + upperBoundTempPlot);

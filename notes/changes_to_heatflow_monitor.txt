@@ -1,0 +1,18 @@
+list of changes to Heatflow Monitor 9/15/21
+---------------
+
+-adjusted color on the status text window to be softer colors for ease of reading text messages.
+-changed text of message for a incomplete line of data to be more human-readable & now includes the verbatim data line.
+-fixed bug where, after printing a pdf, the main plot reverts to showing all the data glitches in the plots.
+-changed the text of the menu entry from 'Export plot As...' to 'Export PDF plot As...' to make the function clearer.
+-Fixed bug where data would append to a pre-existing output data file, if same filename is chosen,
+instead of overwriting the file w/ fresh data.
+-Fixed bug where if there was a file error on the output file, one would get file error.
+messages every time a new line was written. Now one just gets a single error message dialog.
+-Fixed a bug where the debug log configuration file wasn't defined properly and 
+when the program was run from the command line 'java - jar heatflow_monitor.jar'
+or by double-clicking on  it, the logger didn't work.
+
+
+
+

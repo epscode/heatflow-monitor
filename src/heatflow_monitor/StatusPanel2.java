@@ -247,7 +247,7 @@ class StatusPanel2 extends JPanel {
     void addDatarow() {
     
     	logger.info("adding a data row: " + rowNum);
-    	System.out.println("adding a data row: " + rowNum);
+    	// System.out.println("adding a data row: " + rowNum);
     	
     	Vector<String> line = new Vector<String>();
     	// line = alldata.elementAt(rowNum);
