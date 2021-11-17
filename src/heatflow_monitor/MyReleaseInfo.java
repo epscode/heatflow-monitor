@@ -1,5 +1,5 @@
 /* Created by JReleaseInfo AntTask from Open Source Competence Group */
-/* Creation date Fri Sep 17 11:44:31 PDT 2021 */
+/* Creation date Tue Nov 16 20:22:52 PST 2021 */
 package heatflow_monitor;
 
 import java.util.Date;
@@ -12,11 +12,11 @@ import java.util.Date;
 public class MyReleaseInfo {
 
 
-   /** buildDate (set during build process to 1631904271513L). */
-   private static Date buildDate = new Date(1631904271513L);
+   /** buildDate (set during build process to 1637122972164L). */
+   private static Date buildDate = new Date(1637122972164L);
 
    /**
-    * Get buildDate (set during build process to Fri Sep 17 11:44:31 PDT 2021).
+    * Get buildDate (set during build process to Tue Nov 16 20:22:52 PST 2021).
     * @return Date buildDate
     */
    public static final Date getBuildDate() { return buildDate; }
@@ -83,10 +83,10 @@ public class MyReleaseInfo {
 
 
    /**
-    * Get buildNumber (set during build process to 2815).
+    * Get buildNumber (set during build process to 2832).
     * @return int buildNumber
     */
-   public static final int getBuildNumber() { return 2815; }
+   public static final int getBuildNumber() { return 2832; }
 
 
    /** home (set during build process to "http://eps.ucsc.edu/"). */

@@ -170,6 +170,10 @@ import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.printing.PDFPrintable;
 
 import java.awt.print.*;
+
+/** Main GUI class, contains all the menubar items and their functions
+* as well initialized the main classes of the program
+*/
  
 public class Monitor extends JFrame implements WindowListener {
 
@@ -247,18 +251,9 @@ public class Monitor extends JFrame implements WindowListener {
 	XYPlot tiltPlot;
 	XYPlot batteryPlot;
 	
-	// subplots of the main plot suitable for printing (size and color inversion)
-	CombinedDomainXYPlot printingPlot;
-	/*
-	XYPlot temperaturePlotPrint;
-	XYPlot baseTempPlotPrint;
-	XYPlot depthPlotPrint;
-	XYPlot tiltPlotPrint;
-	XYPlot batteryPlotPrint;
-	*/
+	
 	// the renderers for the plot traces for screen and for print
 	XYItemRenderer temperatureRenderer;
-	// XYItemRenderer temperatureRendererPrint;
 	
 	// charts for screen and for print
 	ChartPanel auxChartPanel;
@@ -317,18 +312,12 @@ public class Monitor extends JFrame implements WindowListener {
 	String sciNotationPattern = "0.000E0";
 	DecimalFormat sciNotationaformatter = new DecimalFormat(sciNotationPattern);
 	
-	// double lowerBoundTempPlot = 0.0;
-	// double upperBoundTempPlot = 0.0;
-	
 	NumberAxis recordsRange;
 	
 	MessagesPanel messagesPanel;
 
     private void init() {
     
-    	//PropertiesConfigurator is used to configure logger from properties file
-        // PropertyConfigurator.configure("log4j.xml");
-        
         //DOMConfigurator is used to configure logger from xml configuration file
         DOMConfigurator.configure("log4j.xml");
  
@@ -344,7 +333,6 @@ public class Monitor extends JFrame implements WindowListener {
 		tempPath = absoluteBasePath + "/temp/";
 		
 		// read the preferences file
-		// Preferences preferences = new Preferences(tempPath);
 		Preferences.readPreferencesFile(tempPath);
 		
 		// read data bounds file
@@ -364,7 +352,6 @@ public class Monitor extends JFrame implements WindowListener {
 		Dimension screenSize = toolkit.getScreenSize();
 		
 		messagesPanel = new MessagesPanel();
-		
 		
 		// initializing the data class
 		heatingData = new Data2(absoluteBasePath, messagesPanel);
@@ -491,7 +478,6 @@ public class Monitor extends JFrame implements WindowListener {
 		
 		JPanel probeChooserPanel = new JPanel();
 		probeChooserPanel.setLayout(new BoxLayout(probeChooserPanel, BoxLayout.PAGE_AXIS));
-		// probeChooserPanel.setPreferredSize(new Dimension(100, 600));
 		probeChooserPanel.setMinimumSize(new Dimension(100, 600));
 		
 		probe1Checkbox = new JCheckBox("Probe 1");
@@ -563,11 +549,6 @@ public class Monitor extends JFrame implements WindowListener {
         probe4Checkbox.setSelected(true);
         
 		probeChooserPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		// rename Probe chooser
-		// HeatProbeNames.readProbeNamesFile(tempPath);
-		// changeProbeNames();
-		// changeSeriesNames();
 		
 		this.add(messagesPanel, BorderLayout.PAGE_START);
 		
@@ -704,15 +685,6 @@ public class Monitor extends JFrame implements WindowListener {
 			}
 		});
 		
-		/*
-		// File preferences
-		jMenuFilePreferences.setText("File Preferences...");
-		jMenuFilePreferences.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				jMenuFilePreferences_actionPerformed(e);
-			}
-		});
-		*/
 		
 		// exit the program
 		jMenuFileExit.setText("Exit");
@@ -856,114 +828,6 @@ public class Monitor extends JFrame implements WindowListener {
 		
 		// set the acquisition menu entry to disabled
 		jMenuControlStart.setEnabled(false);
-    }
-    
-    void plottingDisplay() {
-    
-    	// temperatures plot     
-		XYItemRenderer temperatureRenderer = new StandardXYItemRenderer(); 
-		NumberAxis temperatureRange = new NumberAxis("Probe Temps (C)");
-		temperatureRange.setLabelPaint(Color.white);
-    	temperatureRange.setTickLabelPaint(Color.white);
-		XYPlot temperaturePlot = new XYPlot(heatingData.generateTemperatureData(), null, 
-		 temperatureRange, temperatureRenderer); 
-		temperaturePlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		temperatureRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		temperatureRenderer.setBaseStroke(new BasicStroke(2.0f));
-		((AbstractRenderer) temperatureRenderer).setAutoPopulateSeriesStroke(false);
-		temperatureRange.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
-		temperatureRange.setAutoRangeIncludesZero(false);
-		temperatureRenderer.setSeriesPaint(0, Color.red); 
-		temperatureRenderer.setSeriesPaint(1, Color.orange);
-		temperatureRenderer.setSeriesPaint(2, new Color(0, 0, 255));
-		temperatureRenderer.setSeriesPaint(3, new Color(0, 204, 0));
-		temperaturePlot.setBackgroundPaint(Color.black);
-		
-        // base temp plot
-        NumberAxis baseTempRange = new NumberAxis("BW Temp (C)");
-        baseTempRange.setLabelPaint(Color.white);
-    	baseTempRange.setTickLabelPaint(Color.white);
-        XYItemRenderer baseTempRenderer = new StandardXYItemRenderer(); 
-        baseTempPlot = new XYPlot(heatingData.generateBaseTempData(), null, 
-         baseTempRange, baseTempRenderer); 		
-		baseTempRange.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
-		baseTempPlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		baseTempRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		baseTempRenderer.setBaseStroke(new BasicStroke(2.0f));
-		((AbstractRenderer) baseTempRenderer).setAutoPopulateSeriesStroke(false);
-		baseTempRange.setAutoRangeIncludesZero(false);
-		baseTempRenderer.setSeriesPaint(0, Color.green);
-		baseTempPlot.setBackgroundPaint(Color.black);
-		
-		// depth plot
-		XYItemRenderer depthRenderer = new StandardXYItemRenderer(); 
-		NumberAxis depthRange = new NumberAxis("Depth (m)");
-		depthRange.setLabelPaint(Color.white);
-    	depthRange.setTickLabelPaint(Color.white);
-		XYPlot depthPlot = new XYPlot(heatingData.generateDepthData(), null, 
-		 depthRange, depthRenderer); 
-		depthRange.setNumberFormatOverride(oneDecimalFormatter); // set decimal format
-		depthPlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		depthRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		depthRenderer.setBaseStroke(new BasicStroke(2.0f));
-		((AbstractRenderer) depthRenderer).setAutoPopulateSeriesStroke(false);
-		depthRange.setAutoRangeIncludesZero(false);
-		depthRenderer.setSeriesPaint(0, Color.PINK);
-		depthPlot.setBackgroundPaint(Color.black);
-		
-		// tilt plot
-		XYItemRenderer tiltRenderer = new StandardXYItemRenderer(); 
-		NumberAxis tiltRange = new NumberAxis("Tilt (deg)");
-		tiltRange.setLabelPaint(Color.white);
-    	tiltRange.setTickLabelPaint(Color.white);
-		XYPlot tiltPlot = new XYPlot(heatingData.generateTiltData(), null, 
-		 tiltRange, tiltRenderer); 
-		tiltPlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT); 
-		tiltRenderer.setSeriesPaint(0, new Color(51, 204, 255));
-		tiltRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		tiltRange.setNumberFormatOverride(twoDecimalFormatter); // set decimal format
-		tiltRenderer.setBaseStroke(new BasicStroke(2.0f));
-		((AbstractRenderer) tiltRenderer).setAutoPopulateSeriesStroke(false);
-		tiltRange.setAutoRangeIncludesZero(false);
-		tiltPlot.setBackgroundPaint(Color.black);
-		
-		// battery plot
-		XYItemRenderer batteryRenderer = new StandardXYItemRenderer(); 
-		NumberAxis batteryRange = new NumberAxis("Batt (V)");
-		batteryRange.setLabelPaint(Color.white);
-    	batteryRange.setTickLabelPaint(Color.white);
-		XYPlot batteryPlot = new XYPlot(heatingData.generateBatteryData(), null, 
-		 batteryRange, batteryRenderer); 
-		batteryRenderer.setSeriesPaint(0, new Color(255, 0, 0));
-		batteryRenderer.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-		batteryRenderer.setBaseStroke(new BasicStroke(2.0f));
-		((AbstractRenderer) batteryRenderer).setAutoPopulateSeriesStroke(false);
-		batteryRange.setNumberFormatOverride(twoDecimalFormatter); // set decimal format	
-		batteryPlot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-		batteryRange.setAutoRangeIncludesZero(false);
-		batteryPlot.setBackgroundPaint(Color.black);
-				
-		// combine the subplots into one chart
-		NumberAxis recordsRangePrint = new NumberAxis("Record");
-		recordsRangePrint.setNumberFormatOverride(zeroDecimalFormatter); // set decimal format
-		recordsRangePrint.setLabelPaint(Color.white);
-    	recordsRangePrint.setTickLabelPaint(Color.white);
-    	
-    	double lowerBoundTempPlot = recordsRange.getLowerBound();
-		double upperBoundTempPlot = recordsRange.getUpperBound();
-			
-		logger.info("lowerbound print:" + lowerBoundTempPlot);
-    	logger.info("upperbound print:" + upperBoundTempPlot);
-    		
-    	recordsRangePrint.setRange(new Range(lowerBoundTempPlot, upperBoundTempPlot));
-    	
-        CombinedDomainXYPlot printingPlot = new CombinedDomainXYPlot(recordsRange);
-        printingPlot.setGap(10.0);
-        printingPlot.add(temperaturePlot, 2);
-        printingPlot.add(baseTempPlot, 1);
-        printingPlot.add(depthPlot, 1);
-        printingPlot.add(tiltPlot, 1);
-        printingPlot.add(batteryPlot, 1);
     }
     
     // Create the edit menu.
@@ -1126,17 +990,15 @@ public class Monitor extends JFrame implements WindowListener {
 	
 	// print plots menu entry
 	void jMenuFilePrint_actionPerformed(ActionEvent e) {
+	
 		logger.info("print a snapshot of the data collected");
 		
-		try {
-		
+		try {		
 			savePlot(tempPath + "tempPdf.pdf");
 			logger.info("made it past saved plot");
 		
 			PDDocument snapshot = PDDocument.load(new File(tempPath + "tempPdf.pdf"));
 			logger.info("made it to loading plot");
-			
-			plottingDisplay();
 		
 			PrintService myPrintService = findPrintService("Printer Name");
 			
@@ -1172,15 +1034,6 @@ public class Monitor extends JFrame implements WindowListener {
 			 JOptionPane.ERROR_MESSAGE);
 		} 
     }
-    
-    // preference menu entry 
-    /*
-    void jMenuFilePreferences_actionPerformed(ActionEvent e) {
-	
-		PreferencesDialog preferencesDialog = 
-		  new PreferencesDialog(this, tempPath);
-	}
-	*/
     
     // File | Exit action performed
 	public void jMenuFileExit_actionPerformed(ActionEvent event) {
@@ -1292,25 +1145,6 @@ public class Monitor extends JFrame implements WindowListener {
 		dlg.show();
 	}
 	
-	/*
-	// Show and hide the manual menu entry
-	void jMenuHelpManualDisplay_actionPerformed(ActionEvent e) {
-		logger.info("showing user manual - display");
-		
-		SimpleSwingBrowser displayBrowser = new SimpleSwingBrowser();
-    	displayBrowser.setVisible(true);
-        displayBrowser.loadURL("file://" + helpPath + "display_manual.html");
-	}
-	
-	void jMenuHelpManualTheory_actionPerformed(ActionEvent e) {
-		logger.info("showing user manual - theory of operation");
-		
-		SimpleSwingBrowser theoryBrowser = new SimpleSwingBrowser();
-    	theoryBrowser.setVisible(true);
-        theoryBrowser.loadURL("file://" + helpPath + "theory_manual.html");
-	}
-	*/
-	
 	void jMenuHelpManual_actionPerformed(ActionEvent e) {
 		logger.info("showing user manual");
 		
@@ -1415,37 +1249,8 @@ public class Monitor extends JFrame implements WindowListener {
 		logger.debug("Save as command canceled by user.");
 		Preferences.dataFilename = "";
 		
-		// safeFileDialog = new SafeJFileChooser(extension);
-		// returnVal = safeFileDialog.showSaveDialog(this);
-		
 		return false;
 	}
-	
-	// pop up the file save dialog box when the program opens
-	/*
-	public void windowOpened(WindowEvent e) {
-        logger.debug("WindowListener method called: windowOpened.");
-        
-        /*
-        // delay until main window pops up. 
-        // read data bounds file
-		logger.info("trying to set the data bounds values");
-		DataBounds.readBoundsFile(tempPath);
-		
-		// set the path for the heat probe file names
-		HeatProbeNames.setFilepath(tempPath);
-		
-		// read the probes file
-		HeatProbeNames.readProbeNamesFile(tempPath);
-    	
-    
-		do {
-			logger.info("set the data filename");
-			getFilenameForDataSaving(Preferences.getDataFilename());
-		} while (Preferences.getDataFilename().compareTo("") == 0); 
-		
-	}
-	*/
 	
 	// required for overriding window operations - required but not used
 	
@@ -1602,9 +1407,11 @@ public class Monitor extends JFrame implements WindowListener {
 		String currentTime = formatter.format(date);
 	 
 	 	String chartTitle = Preferences.getDataFilename() + " - " + formatter.format(date);
+	 	
+	 	// plottingDisplay(); // added to produce the plot prior to printing 11.16.21
 	 
 	 	printingChart = new JFreeChart(
-		 chartTitle, JFreeChart.DEFAULT_TITLE_FONT, printingPlot, true);
+		 chartTitle, JFreeChart.DEFAULT_TITLE_FONT, printPlot(), true);
 		
 		printingChart.setBackgroundPaint(Color.white);
 		
@@ -1613,7 +1420,6 @@ public class Monitor extends JFrame implements WindowListener {
         Rectangle bounds = new Rectangle(7 * 72, 10 * 72);
         Page page = doc.createPage(bounds);
         PDFGraphics2D g2 = page.getGraphics2D();
-        // JFreeChart chart = createChart(createDataset());
         printingChart.draw(g2, bounds);
         return doc.getPDFBytes();
     }
@@ -1633,117 +1439,12 @@ public class Monitor extends JFrame implements WindowListener {
 		try {
 		
 			logger.info("trying to save the plot to a file (2): " + plotFilename);
-	
-			// temperatures plot
-			NumberAxis temperatureRangePrint = new NumberAxis("Probe Temps (C)");
-			XYItemRenderer temperatureRendererPrint = new StandardXYItemRenderer(); 
+			System.out.println("trying to save the plot to a file (2): " + plotFilename);
 			
-			
-			// XYPlot temperaturePlotPrint = new XYPlot(heatingData.generateTemperatureDataPrint(), 
-			// null, temperatureRangePrint, temperatureRendererPrint);
-			 
-			XYPlot temperaturePlotPrint = new XYPlot(heatingData.generateTemperatureDataPrint(), 
-			 null, temperatureRangePrint, temperatureRendererPrint); 
-			 
-			temperaturePlotPrint.setBackgroundPaint(Color.white);
-			temperatureRangePrint.setLabelPaint(Color.black);
-    		temperatureRangePrint.setTickLabelPaint(Color.black);
-			temperaturePlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			temperatureRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-			temperatureRendererPrint.setBaseStroke(new BasicStroke(1.0f));
-			((AbstractRenderer) temperatureRendererPrint).setAutoPopulateSeriesStroke(false);
-			temperatureRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
-			temperatureRangePrint.setAutoRangeIncludesZero(false);
-			temperatureRendererPrint.setSeriesPaint(0, Color.red); 
-			temperatureRendererPrint.setSeriesPaint(1, Color.orange);
-			temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255));
-			temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0));
-			
-			// base temp plot
-			NumberAxis baseTempRangePrint = new NumberAxis("BW Temp (C)");
-			XYItemRenderer baseTempRendererPrint = new StandardXYItemRenderer(); 
-			XYPlot baseTempPlotPrint = new XYPlot(heatingData.generateBaseTempDataPrint(), 
-			 null, baseTempRangePrint, baseTempRendererPrint);
-			baseTempRangePrint.setLabelPaint(Color.black);
-    		baseTempRangePrint.setTickLabelPaint(Color.black);
-			baseTempRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
-			baseTempPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			baseTempRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-			baseTempRendererPrint.setBaseStroke(new BasicStroke(1.0f));
-			((AbstractRenderer) baseTempRendererPrint).setAutoPopulateSeriesStroke(false);
-			baseTempRangePrint.setAutoRangeIncludesZero(false);
-			baseTempRendererPrint.setSeriesPaint(0, Color.green);
-		
-			// depth plot
-			XYItemRenderer depthRendererPrint = new StandardXYItemRenderer(); 
-			NumberAxis depthRangePrint = new NumberAxis("Depth (m)");
-			XYPlot depthPlotPrint = new XYPlot(heatingData.generateDepthDataPrint(), null, 
-			 depthRangePrint, depthRendererPrint); 
-			depthRangePrint.setNumberFormatOverride(oneDecimalFormatter); // set decimal format
-			depthPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			depthRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-			depthRendererPrint.setBaseStroke(new BasicStroke(1.0f));
-			((AbstractRenderer) depthRendererPrint).setAutoPopulateSeriesStroke(false);
-			depthRangePrint.setAutoRangeIncludesZero(false);
-			depthRendererPrint.setSeriesPaint(0, Color.PINK);
-		
-			// tilt plot
-			XYItemRenderer tiltRendererPrint = new StandardXYItemRenderer(); 
-			NumberAxis tiltRangePrint = new NumberAxis("Tilt (deg)");
-			XYPlot tiltPlotPrint = new XYPlot(heatingData.generateTiltDataPrint(), null, 
-			 tiltRangePrint, tiltRendererPrint); 
-			tiltPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT); 
-			tiltRendererPrint.setSeriesPaint(0, new Color(51, 204, 255));
-			tiltRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-			tiltRangePrint.setNumberFormatOverride(twoDecimalFormatter); // set decimal format
-			tiltRendererPrint.setBaseStroke(new BasicStroke(1.0f));
-			((AbstractRenderer) tiltRendererPrint).setAutoPopulateSeriesStroke(false);
-			tiltRangePrint.setAutoRangeIncludesZero(false);
-		
-			// battery plot
-			XYItemRenderer batteryRendererPrint = new StandardXYItemRenderer();
-			XYLineAndShapeRenderer BatteryLineRendererPrint = new XYLineAndShapeRenderer(true, false);
-			NumberAxis batteryRangePrint = new NumberAxis("Batt (V)");
-			XYPlot batteryPlotPrint = new XYPlot(heatingData.generateBatteryDataPrint(), 
-			 null, batteryRangePrint, batteryRendererPrint); 
-			batteryPlotPrint.setRenderer(BatteryLineRendererPrint);
-			batteryRendererPrint.setSeriesPaint(0, new Color(255, 0, 0));
-			batteryRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
-			batteryRendererPrint.setBaseStroke(new BasicStroke(1.0f));
-			((AbstractRenderer) batteryRendererPrint).setAutoPopulateSeriesStroke(false);
-			batteryRangePrint.setNumberFormatOverride(twoDecimalFormatter); // set decimal format	
-			batteryPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-			batteryRangePrint.setAutoRangeIncludesZero(false);
-			
-			
-			// combine the subplots into one chart
-			NumberAxis recordsRangePrint = new NumberAxis("Record");
-			recordsRangePrint.setNumberFormatOverride(zeroDecimalFormatter); // set decimal format
-    		
-    		double lowerBoundTempPlot = recordsRange.getLowerBound();
-			double upperBoundTempPlot = recordsRange.getUpperBound();
-			
-			logger.info("lowerbound print:" + lowerBoundTempPlot);
-    		logger.info("upperbound print:" + upperBoundTempPlot);
-    		
-    		recordsRangePrint.setRange(new Range(lowerBoundTempPlot, upperBoundTempPlot));
-		
-			printingPlot = new CombinedDomainXYPlot(recordsRangePrint);
-			printingPlot.setGap(10.0);
-			printingPlot.add(temperaturePlotPrint, 2);
-			printingPlot.add(baseTempPlotPrint, 1);
-			printingPlot.add(depthPlotPrint, 1);
-			printingPlot.add(tiltPlotPrint, 1);
-			printingPlot.add(batteryPlotPrint, 1);
-		
-			// rename Probe chooser
-			// HeatProbeNames.readProbeNamesFile(tempPath);
-			// changeProbeNames();
-			// changeSeriesNames();
+			CombinedDomainXYPlot printingPlot = printPlot();
 		
 			PdfWriter writer = new PdfWriter(plotFilename);
         	PdfDocument targetPDF = new PdfDocument(writer);
-        	document = new Document(targetPDF); // , pagesize3x5
 		
 			Document document = new Document(targetPDF); 
 	        
@@ -1807,4 +1508,106 @@ public class Monitor extends JFrame implements WindowListener {
     	comp.setBackground(Color.black);
     	comp.setForeground(Color.white);
 	}
+	
+	public CombinedDomainXYPlot printPlot() {
+    
+		// temperatures plot
+		NumberAxis temperatureRangePrint = new NumberAxis("Probe Temps (C)");
+		XYItemRenderer temperatureRendererPrint = new StandardXYItemRenderer(); 
+		 
+		XYPlot temperaturePlotPrint = new XYPlot(heatingData.generateTemperatureDataPrint(), 
+		 null, temperatureRangePrint, temperatureRendererPrint); 
+		 
+		temperaturePlotPrint.setBackgroundPaint(Color.white);
+		temperatureRangePrint.setLabelPaint(Color.black);
+		temperatureRangePrint.setTickLabelPaint(Color.black);
+		temperaturePlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		temperatureRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		temperatureRendererPrint.setBaseStroke(new BasicStroke(1.0f));
+		((AbstractRenderer) temperatureRendererPrint).setAutoPopulateSeriesStroke(false);
+		temperatureRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
+		temperatureRangePrint.setAutoRangeIncludesZero(false);
+		temperatureRendererPrint.setSeriesPaint(0, Color.red); 
+		temperatureRendererPrint.setSeriesPaint(1, Color.orange);
+		temperatureRendererPrint.setSeriesPaint(2, new Color(0, 0, 255));
+		temperatureRendererPrint.setSeriesPaint(3, new Color(0, 204, 0));
+		
+		// base temp plot
+		NumberAxis baseTempRangePrint = new NumberAxis("BW Temp (C)");
+		XYItemRenderer baseTempRendererPrint = new StandardXYItemRenderer(); 
+		XYPlot baseTempPlotPrint = new XYPlot(heatingData.generateBaseTempDataPrint(), 
+		 null, baseTempRangePrint, baseTempRendererPrint);
+		baseTempRangePrint.setLabelPaint(Color.black);
+		baseTempRangePrint.setTickLabelPaint(Color.black);
+		baseTempRangePrint.setNumberFormatOverride(threeDecimalFormatter); // set decimal format
+		baseTempPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		baseTempRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		baseTempRendererPrint.setBaseStroke(new BasicStroke(1.0f));
+		((AbstractRenderer) baseTempRendererPrint).setAutoPopulateSeriesStroke(false);
+		baseTempRangePrint.setAutoRangeIncludesZero(false);
+		baseTempRendererPrint.setSeriesPaint(0, Color.green);
+	
+		// depth plot
+		XYItemRenderer depthRendererPrint = new StandardXYItemRenderer(); 
+		NumberAxis depthRangePrint = new NumberAxis("Depth (m)");
+		XYPlot depthPlotPrint = new XYPlot(heatingData.generateDepthDataPrint(), null, 
+		 depthRangePrint, depthRendererPrint); 
+		depthRangePrint.setNumberFormatOverride(oneDecimalFormatter); // set decimal format
+		depthPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		depthRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		depthRendererPrint.setBaseStroke(new BasicStroke(1.0f));
+		((AbstractRenderer) depthRendererPrint).setAutoPopulateSeriesStroke(false);
+		depthRangePrint.setAutoRangeIncludesZero(false);
+		depthRendererPrint.setSeriesPaint(0, Color.PINK);
+	
+		// tilt plot
+		XYItemRenderer tiltRendererPrint = new StandardXYItemRenderer(); 
+		NumberAxis tiltRangePrint = new NumberAxis("Tilt (deg)");
+		XYPlot tiltPlotPrint = new XYPlot(heatingData.generateTiltDataPrint(), null, 
+		 tiltRangePrint, tiltRendererPrint); 
+		tiltPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT); 
+		tiltRendererPrint.setSeriesPaint(0, new Color(51, 204, 255));
+		tiltRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		tiltRangePrint.setNumberFormatOverride(twoDecimalFormatter); // set decimal format
+		tiltRendererPrint.setBaseStroke(new BasicStroke(1.0f));
+		((AbstractRenderer) tiltRendererPrint).setAutoPopulateSeriesStroke(false);
+		tiltRangePrint.setAutoRangeIncludesZero(false);
+	
+		// battery plot
+		XYItemRenderer batteryRendererPrint = new StandardXYItemRenderer();
+		XYLineAndShapeRenderer BatteryLineRendererPrint = new XYLineAndShapeRenderer(true, false);
+		NumberAxis batteryRangePrint = new NumberAxis("Batt (V)");
+		XYPlot batteryPlotPrint = new XYPlot(heatingData.generateBatteryDataPrint(), 
+		 null, batteryRangePrint, batteryRendererPrint); 
+		batteryPlotPrint.setRenderer(BatteryLineRendererPrint);
+		batteryRendererPrint.setSeriesPaint(0, new Color(255, 0, 0));
+		batteryRendererPrint.setBaseToolTipGenerator(new StandardXYToolTipGenerator());
+		batteryRendererPrint.setBaseStroke(new BasicStroke(1.0f));
+		((AbstractRenderer) batteryRendererPrint).setAutoPopulateSeriesStroke(false);
+		batteryRangePrint.setNumberFormatOverride(twoDecimalFormatter); // set decimal format	
+		batteryPlotPrint.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+		batteryRangePrint.setAutoRangeIncludesZero(false);
+		
+		// combine the subplots into one chart
+		NumberAxis recordsRangePrint = new NumberAxis("Record");
+		recordsRangePrint.setNumberFormatOverride(zeroDecimalFormatter); // set decimal format
+		
+		double lowerBoundTempPlot = recordsRange.getLowerBound();
+		double upperBoundTempPlot = recordsRange.getUpperBound();
+		
+		logger.info("lowerbound print:" + lowerBoundTempPlot);
+		logger.info("upperbound print:" + upperBoundTempPlot);
+		
+		recordsRangePrint.setRange(new Range(lowerBoundTempPlot, upperBoundTempPlot));
+	
+		CombinedDomainXYPlot printingPlot = new CombinedDomainXYPlot(recordsRangePrint);
+		printingPlot.setGap(10.0);
+		printingPlot.add(temperaturePlotPrint, 2);
+		printingPlot.add(baseTempPlotPrint, 1);
+		printingPlot.add(depthPlotPrint, 1);
+		printingPlot.add(tiltPlotPrint, 1);
+		printingPlot.add(batteryPlotPrint, 1);
+        
+        return printingPlot;
+    }
 }
