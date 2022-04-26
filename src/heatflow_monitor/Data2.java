@@ -25,6 +25,15 @@ import org.jfree.data.xy.XYDataset;
 import javax.swing.*;
 import org.apache.log4j.Logger;
 
+// added 4.19.22 to find last line in a file
+import org.apache.commons.io.input.ReversedLinesFileReader;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Data2 {
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +42,8 @@ public class Data2 {
 	static Logger logger = Logger.getLogger(Heatflow.class.getName());
 	
 	static int linesAlreadyRead = 0;
+	
+	static boolean newData = false;
 	
 	String baseFilePath;
 	String testDataFilePath;
@@ -421,35 +432,267 @@ public class Data2 {
 	
 	public void printDataLineToLog() {
 	
-		logger.info("trying to print data line: " + linesAlreadyRead);
-		// System.out.println("trying to print data line: " + linesAlreadyRead);	
+		try {
+	
+			logger.info("trying to print data line: " + linesAlreadyRead);
+			System.out.println("trying to print data line: " + linesAlreadyRead);	
 		
-		logger.info("record: " + heatflowData.elementAt(linesAlreadyRead - 1).getRecord());
-		logger.info("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
-		logger.info("tilt: " + heatflowData.elementAt(linesAlreadyRead - 1).getTilt());
-		logger.info("depth: " + heatflowData.elementAt(linesAlreadyRead - 1).getDepth());
-		logger.info("base temp: " + heatflowData.elementAt(linesAlreadyRead - 1).getBaseTemp());
-		logger.info("temp1: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe1Temp());
-		logger.info("temp2: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe2Temp());
-		logger.info("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
-		logger.info("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
+			logger.info("record: " + heatflowData.elementAt(linesAlreadyRead - 1).getRecord());
+			logger.info("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
+			logger.info("tilt: " + heatflowData.elementAt(linesAlreadyRead - 1).getTilt());
+			logger.info("depth: " + heatflowData.elementAt(linesAlreadyRead - 1).getDepth());
+			logger.info("base temp: " + heatflowData.elementAt(linesAlreadyRead - 1).getBaseTemp());
+			logger.info("temp1: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe1Temp());
+			logger.info("temp2: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe2Temp());
+			logger.info("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
+			logger.info("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
 		
-		/*
-		System.out.println("trying to print data line: " + linesAlreadyRead);	
-		System.out.println("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
-		System.out.println("tilt: " + heatflowData.elementAt(linesAlreadyRead - 1).getTilt());
-		System.out.println("depth: " + heatflowData.elementAt(linesAlreadyRead - 1).getDepth());
-		System.out.println("base temp: " + heatflowData.elementAt(linesAlreadyRead - 1).getBaseTemp());
-		System.out.println("temp1: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe1Temp());
-		System.out.println("temp2: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe2Temp());
-		System.out.println("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
-		System.out.println("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
-		*/
+			
+			System.out.println("trying to print data line: " + linesAlreadyRead);	
+			System.out.println("batt: " + heatflowData.elementAt(linesAlreadyRead - 1).getBattery());
+			System.out.println("tilt: " + heatflowData.elementAt(linesAlreadyRead - 1).getTilt());
+			System.out.println("depth: " + heatflowData.elementAt(linesAlreadyRead - 1).getDepth());
+			System.out.println("base temp: " + heatflowData.elementAt(linesAlreadyRead - 1).getBaseTemp());
+			System.out.println("temp1: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe1Temp());
+			System.out.println("temp2: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe2Temp());
+			System.out.println("temp3: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe3Temp());
+			System.out.println("temp4: " + heatflowData.elementAt(linesAlreadyRead - 1).getProbe4Temp());
+			
+		} catch (Exception error) {
+		
+			logger.info("Array index out of bounds: " + error);
+			error.printStackTrace();
+			
+		}
 	}
+	
+	public List<String> readLastLine(File file, int numLastLineToRead) {
+
+        List<String> result = new ArrayList<>();
+
+        try (ReversedLinesFileReader reader = new ReversedLinesFileReader(file, StandardCharsets.UTF_8)) {
+
+            String line = "";
+            while ((line = reader.readLine()) != null && result.size() < numLastLineToRead) {
+                result.add(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
+    }
+    
+    static String previousString = null;
+    static int lineNumber = 0;
+    
+    public void readLastLineFromDataFile() {
+    
+    	String fullFilename = "";
+    
+    	try {
+			fullFilename = Preferences.getInputFilename();
+			logger.info("trying to read the data file last line: " + fullFilename);
+			System.out.println("trying to read the data file: " + fullFilename);
+
+			List<String> lines = readLastLine(new File(fullFilename), 1);
+			lines.forEach(x -> System.out.println("fetched new line: " + x));
+			System.out.println("number of lines: " + lines.size() );
+		
+			// might need some additional error checking so we don't end up with multiple bad lines
+			if (lines.size() == 0) {
+				System.out.println("no data");
+				newData = false;
+				
+			} else if (previousString == null) {
+				System.out.println("first line: " + lines.get(0));
+				previousString = lines.get(0);
+				parseDataLine(lines.get(0));
+				newData = true;
+				lineNumber++;
+				
+			} else if (previousString.compareTo(lines.get(0) ) != 0) {
+				System.out.println("new line: " + lines.get(0));
+				previousString = lines.get(0);
+				parseDataLine(lines.get(0));
+				newData = true;
+				lineNumber++;
+				
+			} else {
+				System.out.println("no new data");
+				newData = false;
+			}
+		
+			// inputData.close(); 
+		
+		} catch(Exception error) {
+			
+			String message = "Error reading the input datafile " + 
+			 fullFilename + "\nException: " + error;
+			messagesPanel.setMessage(message);
+		} 
+    }
+    
+    void parseDataLine(String line) {
+    
+    	logger.info("parsing a data line");
+    	System.out.println("parsing a data line");
+    	
+		String[] fileTokens = new String[9];
+		
+		int elementNumber = 0;
+	
+		// add the line even if it's screwed up
+		heatflowData.add(new Datum(line));
+		// heatflowData.elementAt(lineNumber).setRecord(new Integer(lineNumber));
+		
+		try {
+		
+			StringTokenizer st = new StringTokenizer(line, ",");
+
+			while (st.hasMoreTokens() ) {
+				fileTokens[elementNumber] = st.nextToken();
+				logger.debug("fileTokens[" + elementNumber + "]: " + fileTokens[elementNumber]);
+				elementNumber++;
+			}
+			
+			System.out.println("number of elements: " + elementNumber);
+			
+			
+			if (elementNumber != 9) {
+				heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
+				throw new Exception("Parse Error");
+			}
+			
+	
+			/*
+			} else {
+				String message = (lineNumber + 1) + ": Complete data line returned";
+				messagesPanel.setMessage(message);
+			}
+			*/
+	
+			// need to check each field can convert
+
+			String pattern = "yyyy-MM-dd hh:mm:ss";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			Date samplingTime = simpleDateFormat.parse(fileTokens[0]);
+			
+			heatflowData.elementAt(lineNumber).setRecord(new Integer(lineNumber));
+			
+			heatflowData.elementAt(lineNumber).setSamplingTime(samplingTime);
+			
+			heatflowData.elementAt(lineNumber).setBattery(new Double(fileTokens[1]));
+			heatflowData.elementAt(lineNumber).setTilt(new Double(fileTokens[2]));
+			heatflowData.elementAt(lineNumber).setDepth(new Double(fileTokens[3]));
+			heatflowData.elementAt(lineNumber).setBaseTemp(new Double(fileTokens[4]));
+	
+			heatflowData.elementAt(lineNumber).setProbe1Temp(new Double(fileTokens[5]));
+			heatflowData.elementAt(lineNumber).setProbe2Temp(new Double(fileTokens[6]));
+			heatflowData.elementAt(lineNumber).setProbe3Temp(new Double(fileTokens[7]));
+			heatflowData.elementAt(lineNumber).setProbe4Temp(new Double(fileTokens[8]));
+			
+			// for the plots
+			probe1Series.add(lineNumber + 1, getHeatflowDatum(lineNumber).getProbe1Temp());
+			probe2Series.add(lineNumber + 1, getHeatflowDatum(lineNumber).getProbe2Temp());
+			probe3Series.add(lineNumber + 1, getHeatflowDatum(lineNumber).getProbe3Temp());
+			probe4Series.add(lineNumber + 1, getHeatflowDatum(lineNumber).getProbe4Temp());
+	
+			baseTempSeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getBaseTemp());
+			depthSeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getDepth());
+			tiltSeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getTilt());
+			batterySeries.add(lineNumber + 1, getHeatflowDatum(lineNumber).getBattery());
+	
+			// for the plot states
+			DataStates.determineProbe1TempStatus(getHeatflowDatum(lineNumber).getProbe1Temp());
+			DataStates.determineProbe2TempStatus(getHeatflowDatum(lineNumber).getProbe2Temp());
+			DataStates.determineProbe3TempStatus(getHeatflowDatum(lineNumber).getProbe3Temp());
+			DataStates.determineProbe4TempStatus(getHeatflowDatum(lineNumber).getProbe4Temp());
+			DataStates.determineBaseTempStatus(getHeatflowDatum(lineNumber).getBaseTemp());
+			DataStates.determineBatteryStatus(getHeatflowDatum(lineNumber).getBattery());
+			DataStates.determineTiltStatus(getHeatflowDatum(lineNumber).getTilt());
+			DataStates.determineDepthStatus(getHeatflowDatum(lineNumber).getDepth());
+
+			// String message = (lineNumber + 1) + ": Complete data line returned";
+			// messagesPanel.setMessage(message);
+			
+			messagesPanel.setMessage(line);
+			
+			messagesPanel.setErrorCondition(false);
+			messagesPanel.addStatus("Data is complete");
+			
+		} catch (NumberFormatException error) {
+		
+			heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
+		
+			// String message = "Number format problem reading the input " + 
+			//  " Exception: " + error;
+			
+			String message = line + "\n" +
+			 "Couldn't parse the input line";
+			 
+			logger.info("Couldn't parse the input line: " + line);
+			
+			messagesPanel.setErrorCondition(true);
+			messagesPanel.setMessage(message);
+			
+			// errors in red and bold
+			// idea, maybe show line and then comment as ok or bad, turn area green or red
+			// can display more than one line at a time or can reduce size, use larger text
+
+		} catch (ParseException error) {
+		
+			heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
+	
+			// String message = "Parse error reading the input " + 
+			//  " Exception: " + error;
+			
+			String message = line + "\n" +
+			 "Couldn't parse the input line";
+			 
+			logger.info("Couldn't parse the input line: " + line);
+			
+			messagesPanel.setErrorCondition(true);
+			messagesPanel.setMessage(message);
+			
+			// test error checking by screwing up data lines -add incoming text window
+			// it would be nice to have elapsed time on the screen somewhere maybe in the menu
+		} catch (Exception error) {
+		
+			heatflowData.elementAt(lineNumber).setRecord(new Integer(-1));
+		
+			// String message = "Parse error reading the input " +
+			//  " Exception: " + error;
+			 
+			String message = line + "\n" +
+			 "Couldn't parse the input line";
+			  
+			logger.info("Couldn't parse the input line: " + line);
+			
+			messagesPanel.setErrorCondition(true);
+			messagesPanel.setMessage(message);
+			
+		} finally {
+		
+			/*
+			String tempFilename = Preferences.getDataFilename();
+			writeDatafileLine(tempFilename, lineNumber);
+			*/
+			
+			System.out.println("added a line, linesAlreadyRead: " + linesAlreadyRead);
+			System.out.println("added a line, lineNumber: " + lineNumber);
+			
+			
+			linesAlreadyRead++;
+	
+			return;	
+		}
+	}		
 	
 	public void readDataLine() {
 	
-		String fullFilename = testDataFilePath + "SyntheticData_210228_currupted.txt";
+		String fullFilename = testDataFilePath + "SyntheticData_210228.txt";
 		logger.info("trying to read the data file: " + fullFilename);
 		System.out.println("trying to read the data file: " + fullFilename);
 		
@@ -558,7 +801,7 @@ public class Data2 {
 					 	String message = line + "\n" +
 					 	 "Couldn't parse the input line";
 					 	 
-					 	logger.info(message);
+					 	logger.info("Couldn't parse the input line: " + line);
 					 	
 					 	messagesPanel.setErrorCondition(true);
 						messagesPanel.setMessage(message);
@@ -577,7 +820,7 @@ public class Data2 {
 					 	String message = line + "\n" +
 					 	 "Couldn't parse the input line";
 					 	 
-					 	logger.info(message);
+					 	logger.info("Couldn't parse the input line: " + line);
 					 	
 					 	messagesPanel.setErrorCondition(true);
 						messagesPanel.setMessage(message);
@@ -594,7 +837,7 @@ public class Data2 {
 						String message = line + "\n" +
 					 	 "Couldn't parse the input line";
 						  
-						logger.info(message);
+						logger.info("Couldn't parse the input line: " + line);
 						
 						messagesPanel.setErrorCondition(true);
 						messagesPanel.setMessage(message);
@@ -616,7 +859,7 @@ public class Data2 {
 				lineNumber++;
 			}
 
-			inputData.close();
+			inputData.close(); 
 		
 		} catch(IOException error) {
 			

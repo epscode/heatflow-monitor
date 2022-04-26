@@ -28,6 +28,7 @@ class Preferences {
 	static String suggestedDataFilename = "";
 	static String dataFilePath = "";
 	static String previousPath = "";
+	static String inputFilename = "";
 
 	// log4j
 	static Logger logger = Logger.getLogger(Heatflow.class.getName() );
@@ -48,6 +49,7 @@ class Preferences {
 		
 		logger.debug("samplingInterval " + samplingInterval);
 		logger.debug("dataFilePath " + dataFilePath);
+		logger.debug("inputFilename " + inputFilename);
 		
 		try {
 		
@@ -56,6 +58,7 @@ class Preferences {
 
 			preferencesPrinter.println("samplingInterval " + samplingInterval);
 			preferencesPrinter.println("dataFilePath " + dataFilePath);
+			preferencesPrinter.println("inputFilename " + inputFilename);
 
 			preferencesPrinter.close();
 			preferencesWriter.close();
@@ -96,8 +99,13 @@ class Preferences {
 				} 		
 				
 				if (fileTokens[0].equalsIgnoreCase("dataFilePath")) {
-					dataFilename = fileTokens[1].trim();
+					dataFilename = fileTokens[1].trim(); // shouldn't this be dataFilePath?
 					logger.info("default data path: " + dataFilePath);
+				}
+				
+				if (fileTokens[0].equalsIgnoreCase("inputFile")) {
+					inputFilename = fileTokens[1].trim();
+					logger.info("input file name: " + inputFilename);
 				}
 			}
 
@@ -138,5 +146,13 @@ class Preferences {
 	
 	public static int getSamplingInterval() {
 		return samplingInterval;
+	}
+	
+	public static String getInputFilename() {
+		return inputFilename;
+	}
+	
+	public static String getDataFilePath() {
+		return dataFilePath;
 	}
 }

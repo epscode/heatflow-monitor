@@ -1,2 +1,3 @@
 samplingInterval 1
-dataFilePath /Users/elimorris/Desktop/heatflow_monitor/temp
+dataFilePath 
+inputFilename /Applications/heatflow/heatflow-monitor/temp/input.txt

@@ -157,40 +157,6 @@ class HeatProbeNames {
 		}
 	}
 	
-	/*
-	static void setProbe1Name(String probe1Name) {
-		probe1Name = probe1Name;
-	}
-	
-	static void setProbe2Name(String probe2Name) {
-		probe2Name = probe2Name;
-	}
-	
-	static void setProbe3Name(String probe3Name) {
-		probe3Name = probe3Name;
-	}
-	
-	static void setProbe4Name(String probe4Name) {
-		probe4Name = probe4Name;
-	}
-	
-	static void setProbe1Depth(double probe1Depth) {
-		probe1Depth = probe1Depth;
-	}
-	
-	static void setProbe2Depth(double probe2Depth) {
-		probe2Depth = probe2Depth;
-	}
-	
-	static void setProbe3Depth(double probe3Depth) {
-		probe3Depth = probe3Depth;
-	}
-	
-	static void setProbe4Depth(double probe4Depth) {
-		probe4Depth = probe4Depth;
-	}
-	*/
-	
 	static String getProbe1Name() {
 		logger.info("probe 1: " + probe1Name);
 		return probe1Name;
@@ -330,7 +296,6 @@ class HeatProbeNames {
 		}
 	}
 	
-	
 	static void setPossibleProbeName(String probeName) {
 	
 		possibleProbeNames.add(probeName);
@@ -373,31 +338,4 @@ class HeatProbeNames {
 	static Vector<Double> getPossibleProbeDepths() {
 		return possibleProbeDepths;
 	}
-	
-	/*
-	// calculate distance differences
-	static double calculateUpperDistance(double probe1Depth, double probe2Depth) {
-	
-		double upperDistance = probe2Depth - probe1Depth;
-		return upperDistance;
-	}
-	
-	static double calculateMiddleDistance(double probe2Depth, double probe3Depth) {
-	
-		double middleDistance = probe3Depth - probe2Depth;
-		return middleDistance;
-	}
-	
-	static double calculateLowerDistance(double probe3Depth, double probe4Depth) {
-	
-		double lowerDistance = probe4Depth - probe3Depth;
-		return lowerDistance;
-	}
-	
-	static double calculateFullDistance(double probe1Depth, double probe4Depth) {
-	
-		double fullDistance = probe4Depth - probe1Depth;
-		return fullDistance;
-	}
-	*/
 }

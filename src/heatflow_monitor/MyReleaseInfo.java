@@ -1,5 +1,5 @@
 /* Created by JReleaseInfo AntTask from Open Source Competence Group */
-/* Creation date Tue Nov 16 20:22:52 PST 2021 */
+/* Creation date Mon Apr 25 13:38:49 PDT 2022 */
 package heatflow_monitor;
 
 import java.util.Date;
@@ -12,11 +12,11 @@ import java.util.Date;
 public class MyReleaseInfo {
 
 
-   /** buildDate (set during build process to 1637122972164L). */
-   private static Date buildDate = new Date(1637122972164L);
+   /** buildDate (set during build process to 1650919129245L). */
+   private static Date buildDate = new Date(1650919129245L);
 
    /**
-    * Get buildDate (set during build process to Tue Nov 16 20:22:52 PST 2021).
+    * Get buildDate (set during build process to Mon Apr 25 13:38:49 PDT 2022).
     * @return Date buildDate
     */
    public static final Date getBuildDate() { return buildDate; }
@@ -42,11 +42,11 @@ public class MyReleaseInfo {
    public static final String getBuildTimeStamp() { return buildTimeStamp; }
 
 
-   /** copyright (set during build process to "2021, Brecky Morris and The University of California, Santa Cruz"). */
-   private static String copyright = "2021, Brecky Morris and The University of California, Santa Cruz";
+   /** copyright (set during build process to "2022, Brecky Morris and The University of California, Santa Cruz"). */
+   private static String copyright = "2022, Brecky Morris and The University of California, Santa Cruz";
 
    /**
-    * Get copyright (set during build process to "2021, Brecky Morris and The University of California, Santa Cruz").
+    * Get copyright (set during build process to "2022, Brecky Morris and The University of California, Santa Cruz").
     * @return String copyright
     */
    public static final String getCopyright() { return copyright; }
@@ -62,11 +62,11 @@ public class MyReleaseInfo {
    public static final String getMail() { return mail; }
 
 
-   /** version (set during build process to "0.1"). */
-   private static String version = "0.1";
+   /** version (set during build process to "1.0"). */
+   private static String version = "1.0";
 
    /**
-    * Get version (set during build process to "0.1").
+    * Get version (set during build process to "1.0").
     * @return String version
     */
    public static final String getVersion() { return version; }
@@ -83,10 +83,10 @@ public class MyReleaseInfo {
 
 
    /**
-    * Get buildNumber (set during build process to 2832).
+    * Get buildNumber (set during build process to 2970).
     * @return int buildNumber
     */
-   public static final int getBuildNumber() { return 2832; }
+   public static final int getBuildNumber() { return 2970; }
 
 
    /** home (set during build process to "http://eps.ucsc.edu/"). */

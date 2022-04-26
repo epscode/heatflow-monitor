@@ -1,5 +1,16 @@
 Questions
 -----------
+add test mode give good indication of test mode active
+
+add location of realtime data file in preferences
+dataFilePath /Users/breckymorris/Documents
+
+Try and find a way to make the 'new' menu item more intuitive (low priority)
+Not really clear why 'start acquisition' is grayed out
+
+
+
+
 
 Where is data coming from?
 

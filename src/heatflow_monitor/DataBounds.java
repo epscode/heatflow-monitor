@@ -156,22 +156,18 @@ class DataBounds {
 			dataBoundsPrinter.println("battery," + 
 			 getBatteryLowLimit() + "," +
 	  		 getBatteryHighLimit() );
-	  		 // getBatteryWarnLimit() );
 			
 			dataBoundsPrinter.println("tilt," +
 			 getTiltLowLimit() + "," +
 	  		 getTiltHighLimit() );
-	  		 // getTiltWarnLimit() );
 	  
 			dataBoundsPrinter.println("depth," +
 			 getDepthLowLimit() + "," +
 	  		 getDepthHighLimit() );
-	  		 // getDepthWarnLimit() );
 			
 			dataBoundsPrinter.println("probes," +
 			 getProbeLowLimit() + "," +
 	  		 getProbeHighLimit() );
-	  		 // getProbeWarnLimit() );
 			
 			dataBoundsPrinter.close();
 			dataBoundsWriter.close();
@@ -207,25 +203,21 @@ class DataBounds {
 				
 					batteryLowLimit = (new Double(fileTokens[1]) ).doubleValue();
 					batteryHighLimit = (new Double(fileTokens[2]) ).doubleValue();
-					// batteryWarnLimit = (new Double(fileTokens[3]) ).doubleValue();
 					
 				} else if (fileTokens[0].compareTo("tilt") == 0) {
 				
 					tiltLowLimit = (new Double(fileTokens[1]) ).doubleValue();
 					tiltHighLimit = (new Double(fileTokens[2]) ).doubleValue();
-					// tiltWarnLimit = (new Double(fileTokens[3]) ).doubleValue();
 					
 				} else if (fileTokens[0].compareTo("depth") == 0) {
 				
 					depthLowLimit = (new Double(fileTokens[1]) ).doubleValue();
 					depthHighLimit = (new Double(fileTokens[2]) ).doubleValue();
-					// depthWarnLimit = (new Double(fileTokens[3]) ).doubleValue();
 					
 				} else if (fileTokens[0].compareTo("probes") == 0) {
 				
 					probeLowLimit = (new Double(fileTokens[1]) ).doubleValue();
 					probeHighLimit = (new Double(fileTokens[2]) ).doubleValue();
-					// probeWarnLimit = (new Double(fileTokens[3]) ).doubleValue();
 						
 				} 	
 			}

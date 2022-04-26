@@ -1,0 +1,14 @@
+Changes from build 2835 to 2970
+-------------------------------
+
+Added a method for reading the data as it comes from the probe into a file.
+This file can be selected from the user interface and the name of the file is saved
+in the preferences file along with the sampling rate and the data directory.
+A new file menu entry is introduced named 'Set the Data Input File'.
+
+A new mode that sets the input data to be the synthetic file is introduced and
+a new file entry is labeled 'Set Synthetic Data Mode to True'.
+	A warning dialog is then displayed that one has to click through.
+	
+
+	

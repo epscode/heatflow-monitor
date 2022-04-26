@@ -1,0 +1,41 @@
+TestReadLastLine.java
+
+package com.mkyong.io;
+
+import org.apache.commons.io.input.ReversedLinesFileReader;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestReadLastLine {
+
+    public static void main(String[] args) {
+
+        List<String> lines = readLastLine(new File("D:\\server.log"), 3);
+        lines.forEach(x -> System.out.println(x));
+
+    }
+
+    public static List<String> readLastLine(File file, int numLastLineToRead) {
+
+        List<String> result = new ArrayList<>();
+
+        try (ReversedLinesFileReader reader = new ReversedLinesFileReader(file, StandardCharsets.UTF_8)) {
+
+            String line = "";
+            while ((line = reader.readLine()) != null && result.size() < numLastLineToRead) {
+                result.add(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return result;
+
+    }
+
+}

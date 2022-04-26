@@ -31,7 +31,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-
 class StatusPanel2 extends JPanel {
 
 	/**
@@ -106,8 +105,6 @@ class StatusPanel2 extends JPanel {
 		super(new GridLayout(1, 1));
 		
 		this.heatingData = heatingData;
-		
-		
 		
 		boolean DEBUG = false;
 		
@@ -231,7 +228,6 @@ class StatusPanel2 extends JPanel {
     		}
 		});
 		
-		 
         jscrollPane = new JScrollPane(table);
         
         jscrollPane.getViewport().setBackground(Color.black);
@@ -247,7 +243,7 @@ class StatusPanel2 extends JPanel {
     void addDatarow() {
     
     	logger.info("adding a data row: " + rowNum);
-    	// System.out.println("adding a data row: " + rowNum);
+    	System.out.println("adding a data row: " + rowNum);
     	
     	Vector<String> line = new Vector<String>();
     	// line = alldata.elementAt(rowNum);

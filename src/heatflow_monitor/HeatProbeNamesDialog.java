@@ -82,13 +82,6 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 		depth3Label.setText(twoDecimalFormatter.format(HeatProbeNames.getProbe3Depth()) + " m");
 		depth4Label.setText(twoDecimalFormatter.format(HeatProbeNames.getProbe4Depth()) + " m");
 		
-		/*
-		officialNameChooser1.setEditable(true);
-		officialNameChooser2.setEditable(true);
-		officialNameChooser3.setEditable(true);
-		officialNameChooser4.setEditable(true);
-		*/
-		
 		officialNameChooser1.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				officialNameChooser1_actionPerformed(e);
@@ -323,7 +316,9 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 
 		// look for duplicates
 		for (int index = 0; index < 3; index++) {
+		
 			if (probeNames.get(index).compareTo(probeNames.get(index + 1)) == 0) {
+			
 				logger.info("found a duplicate entry");
 				return true;
 			}
@@ -333,6 +328,7 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 	}
 
 	public void cancelButton_actionPerformed(ActionEvent ae) {
+	
 		cancel = true;
 
 		setVisible(false);
@@ -340,6 +336,7 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 	}
 	
 	private void officialNameChooser1_actionPerformed(ActionEvent event) {
+	
 		logger.info("official name chooser 1");
 		
 		int officialNameChooser1Index = officialNameChooser1.getSelectedIndex();
@@ -350,6 +347,7 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 	}
 	
 	private void officialNameChooser2_actionPerformed(ActionEvent event) {
+	
 		logger.info("official name chooser 2");
 		
 		int officialNameChooser2Index = officialNameChooser2.getSelectedIndex();
@@ -360,6 +358,7 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 	}
 	
 	private void officialNameChooser3_actionPerformed(ActionEvent event) {
+	
 		logger.info("official name chooser 3");
 		
 		int officialNameChooser3Index = officialNameChooser3.getSelectedIndex();
@@ -370,6 +369,7 @@ class HeatProbeNamesDialog extends CenterDialogBox {
 	}
 	
 	private void officialNameChooser4_actionPerformed(ActionEvent event) {
+	
 		logger.info("official name chooser 4");
 		
 		int officialNameChooser4Index = officialNameChooser4.getSelectedIndex();

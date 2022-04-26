@@ -12,12 +12,12 @@ import java.text.*;
 
 /**
  * @author Brecky Morris
- * @version 1.01
+ * @version 0.1
  * 
  * 
- * <p>Title: Degasser</p>
- * <p>Description: Provides an interface for a vacuum degasser in the Earth and Planetary Sciences Dept.</p>
- * <p>Copyright: Copyright (c) 2018-20 by Brecky Morris &amp; University of California</p>
+ * <p>Title: Heatflow</p>
+ * <p>Description: Provides a real-time monitor for the deep-sea probe thermal measurements in the Earth and Planetary Sciences Dept.</p>
+ * <p>Copyright: Copyright (c) 2020-21 by Brecky Morris &amp; University of California</p>
  * <p>Company: University of California, Santa Cruz (UCSC)</p>
  * <p>License: GNU General Public License, Version 3</p>
  * 

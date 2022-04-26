@@ -208,10 +208,11 @@ public class Monitor extends JFrame implements WindowListener {
 	public JMenuItem jMenuFileOpen;
 	public JMenuItem jMenuFileStart;
 	public JMenuItem jMenuFileStop;
-	public JMenuItem jMenuConfigLabels;
+	public JMenuItem jMenuFileConfigLabels;
+	public JMenuItem jMenuFileSetTestMode;
 	public JMenuItem jMenuFileExport;
 	public JMenuItem jMenuFileExportPlot;
-	public JMenuItem jMenuFilePreferences;
+	public JMenuItem jMenuFileInputFile;
 	public JMenuItem jMenuFileDataBounds;
 	public JMenuItem jMenuFilePrint;
 	public JMenuItem jMenuFileExit;
@@ -227,6 +228,7 @@ public class Monitor extends JFrame implements WindowListener {
 	JMenuItem jMenuViewBatteryPlot;
 	JMenuItem jMenuViewTiltPlot;
 	JMenuItem jMenuViewScrollEnable;
+	JMenuItem jMenuViewClearPlot;
 	
 	// Control Menu
 	JMenu jMenuControl;
@@ -334,6 +336,7 @@ public class Monitor extends JFrame implements WindowListener {
 		
 		// read the preferences file
 		Preferences.readPreferencesFile(tempPath);
+		logger.info("input data file: " + Preferences.getInputFilename() );
 		
 		// read data bounds file
 		logger.info("trying to set the data bounds values");
@@ -601,9 +604,10 @@ public class Monitor extends JFrame implements WindowListener {
 		jMenuFile = new JMenu();
 		jMenuFileNew = new JMenuItem();
 		jMenuFileOpen = new JMenuItem();
-		jMenuFilePreferences = new JMenuItem();
 		jMenuFileDataBounds = new JMenuItem();
-		jMenuConfigLabels = new JMenuItem();
+		jMenuFileInputFile = new JMenuItem();
+		jMenuFileConfigLabels = new JMenuItem();
+		jMenuFileSetTestMode = new JMenuItem();
 		jMenuFileExport = new JMenuItem();
 		jMenuFileExportPlot = new JMenuItem();
 		jMenuFilePrint = new JMenuItem();
@@ -620,6 +624,7 @@ public class Monitor extends JFrame implements WindowListener {
 		jMenuViewBatteryPlot = new JMenuItem();
 		jMenuViewTiltPlot = new JMenuItem();
 		jMenuViewScrollEnable = new JMenuItem();
+		jMenuViewClearPlot = new JMenuItem();
 		
 		jMenuControl = new JMenu();
 		jMenuControlStart = new JMenuItem();
@@ -654,12 +659,29 @@ public class Monitor extends JFrame implements WindowListener {
 		});
 		
 		// configure the probe names
-		jMenuConfigLabels.setText("Configure Probe Names...");
-		jMenuConfigLabels.addActionListener(new ActionListener() {
+		jMenuFileConfigLabels.setText("Configure Probe Names...");
+		jMenuFileConfigLabels.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				jMenuConfigLabels_actionPerformed(e);
+				jMenuFileConfigLabels_actionPerformed(e);
 			}
 		});
+		
+		// set test mode
+		jMenuFileSetTestMode.setText("Set Synthetic Data Mode to True");
+		jMenuFileSetTestMode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jMenuFileSetTestMode_actionPerformed(e);
+			}
+		});
+		
+		// set the data input file
+		jMenuFileInputFile.setText("Set the Data Input File...");
+		jMenuFileInputFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jMenuFileInputFile_actionPerformed(e);
+			}
+		});
+		
 		
 		// print the plot
 		jMenuFilePrint.setText("Print...");
@@ -742,6 +764,15 @@ public class Monitor extends JFrame implements WindowListener {
 			}
 		});
 		
+		// clear the plot without clearing the data
+		jMenuViewClearPlot.setText("Clear the Plot");
+		jMenuViewClearPlot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				jMenuViewClearPlot_actionPerformed(e);
+			}
+		});
+		
+		
 		// start or stop the acquisition process
 		jMenuControlStart.setText("Start Acquisition");
 		jMenuControlStart.addActionListener(new ActionListener() {
@@ -777,7 +808,9 @@ public class Monitor extends JFrame implements WindowListener {
 		jMenuFile.add(jMenuFileOpen);
 		jMenuFile.addSeparator();;
 		jMenuFile.add(jMenuFileDataBounds);
-		jMenuFile.add(jMenuConfigLabels);
+		jMenuFile.add(jMenuFileConfigLabels);
+		jMenuFile.add(jMenuFileSetTestMode);
+		jMenuFile.add(jMenuFileInputFile);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuFileExportPlot);
 		jMenuFile.add(jMenuFilePrint);
@@ -820,7 +853,7 @@ public class Monitor extends JFrame implements WindowListener {
 		this.setJMenuBar(jMenuBar);
 		
 		// set the title to the program
-		this.setTitle("Heatflow Monitor");
+		this.setTitle("Heatflow Monitor (Open Previous Data File or Create New Data File)");
 		
 		// adds a hook so that when the program opens, the 'save' dialog box will
 		// pop up
@@ -977,7 +1010,7 @@ public class Monitor extends JFrame implements WindowListener {
 	}
 	
 	// temperature probe labels menu entry
-	void jMenuConfigLabels_actionPerformed(ActionEvent e) {
+	void jMenuFileConfigLabels_actionPerformed(ActionEvent e) {
 		logger.info("config plot label names");
 		
 		HeatProbeNamesDialog heatProbeNamesDialog = 
@@ -986,6 +1019,35 @@ public class Monitor extends JFrame implements WindowListener {
 		 logger.info("after running the heat probe name dialog box.");
 		 changeProbeNames();
 		 changeSeriesNames();
+	}
+	
+	// set test mode
+	void jMenuFileSetTestMode_actionPerformed(ActionEvent e) {
+		if (fetchData.getMode() == true) {
+			jMenuFileSetTestMode.setText("Set Synthetic Data Mode to True");
+			fetchData.setMode(false);
+		} else {
+		
+			// warning that the data is fake
+			JOptionPane.showMessageDialog(this,
+    		 "Data will be synthetic.\n" +
+    		 "To Clear this mode, stop acquisition\n" +
+    		 " and take the program out of test mode.\n",
+    		 "Use with Caution and Only for Testing",
+    		 JOptionPane.WARNING_MESSAGE);
+    
+			jMenuFileSetTestMode.setText("Set Synthetic Data Mode to False");
+			fetchData.setMode(true);
+		}
+	}
+	
+	// void set the data input filename
+	void jMenuFileInputFile_actionPerformed(ActionEvent e) {
+		logger.info("file input filename dialog");
+		
+		InputFileDialog inputFileDialog =
+			new InputFileDialog(this, tempPath);
+	
 	}
 	
 	// print plots menu entry
@@ -1103,6 +1165,11 @@ public class Monitor extends JFrame implements WindowListener {
     		jMenuViewScrollEnable.setText("Disable Table Scrolling");
     		statusPanel.setScrollTableEnable(true);
     	}
+    }
+    
+    void jMenuViewClearPlot_actionPerformed(ActionEvent e) {
+    
+    	logger.info("clearing the plot");
     }
 	
 	// Show and hide the start and stop the acquisition menu entry

@@ -1,4 +1,4 @@
-probe1 T01 1.0
-probe2 T06 6.0
-probe3 T11 11.0
-probe4 T16 16.0
+probe1 T02 2.0
+probe2 T03 3.0
+probe3 T13 13.0
+probe4 T17 17.0

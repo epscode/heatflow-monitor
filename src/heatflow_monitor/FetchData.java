@@ -2,37 +2,19 @@ package heatflow_monitor;
 
 import static java.util.concurrent.TimeUnit.*;
 import java.util.concurrent.*;
+import javax.swing.JLabel;
 
 //log4j
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-import javax.swing.JLabel;
-
-/*
-class FetchData {
-	private final ScheduledExecutorService scheduler =
-	 Executors.newScheduledThreadPool(1);
-
-    public void beepForAnHour() {
-        final Runnable beeper = new Runnable() {
-                public void run() { System.out.println("beep"); }
-            };
-    	final ScheduledFuture<?> beeperHandle =
-            scheduler.scheduleAtFixedRate(beeper, 10, 10, SECONDS);
-        scheduler.schedule(new Runnable() {
-                public void run() { beeperHandle.cancel(true); }
-            }, 60 * 60, SECONDS);
-    }
- }
-*/
-
 class FetchData {
 
 	Data2 heatingData;
 	StatusPanel2 statusPanel;
 	JLabel elapsedTimeLabelVal;
+	boolean testMode = false;
 	
 	int samplingInterval = 10;
 	
@@ -43,8 +25,17 @@ class FetchData {
 	ScheduledExecutorService scheduledExecutorService;
 	
 	ScheduledFuture<?> scheduledFuture;
+	
+	public void setMode(boolean testMode) {
+		this.testMode = testMode;
+	}
+	
+	public boolean getMode() {
+		return testMode;
+	}
 
 	public FetchData(Data2 heatingData, StatusPanel2 statusPanel, JLabel elapsedTimeLabelVal) {
+	
 		this.heatingData = heatingData;
 		this.statusPanel = statusPanel;
 		this.elapsedTimeLabelVal = elapsedTimeLabelVal;
@@ -52,8 +43,6 @@ class FetchData {
 		logger.info("creating new fetch data object");
 		
 		scheduledExecutorService = Executors.newScheduledThreadPool(1);
-		
-		// scheduledExecutorService.setRemoveOnCancelPolicy(true);
 	}
 
 	// Create the task to execute
@@ -63,18 +52,42 @@ class FetchData {
         	System.out.println("Fetching new data");
         	logger.info("fetching new data");
         	
-        	heatingData.readDataLine();
-        	heatingData.printDataLineToLog();
-        	heatingData.calculateLastGradient();
+        	if (testMode == true) {
         	
-        	System.out.println("Is this causing a problem?");
-        	heatingData.calculateElapsedTime();
+				heatingData.readDataLine();
+				heatingData.printDataLineToLog();
+				heatingData.calculateLastGradient();
+			
+				System.out.println("Is this causing a problem?");
+				heatingData.calculateElapsedTime();
+			
+				System.out.println("elapsed time: " + heatingData.calculateElapsedTime());
+			
+				elapsedTimeLabelVal.setText(heatingData.calculateElapsedTime() );
+				statusPanel.addDatarow();
+				statusPanel.setProbeStates();
+				
+        	} else {
         	
-        	System.out.println("elapsed time: " + heatingData.calculateElapsedTime());
-        	
-			elapsedTimeLabelVal.setText(heatingData.calculateElapsedTime() );
-        	statusPanel.addDatarow();
-        	statusPanel.setProbeStates();	
+        		heatingData.readLastLineFromDataFile();
+        		
+        		// only update data display if we have new data
+        		if (heatingData.newData) {
+        			heatingData.printDataLineToLog();
+					heatingData.calculateLastGradient();
+			
+					System.out.println("after calculating the gradient");
+					heatingData.calculateElapsedTime();
+				
+					System.out.println("elapsed time: " + heatingData.calculateElapsedTime());
+			
+					elapsedTimeLabelVal.setText(heatingData.calculateElapsedTime() );
+				
+					System.out.println("make it adding a row to the status window");
+					statusPanel.addDatarow();
+					statusPanel.setProbeStates();
+				}
+        	}
     	}
 	};
 	
@@ -89,14 +102,11 @@ class FetchData {
 		scheduledFuture =
     		scheduledExecutorService.scheduleAtFixedRate(r, 1, samplingInterval, TimeUnit.SECONDS);
     }
-    
-	// Wait 5 seconds
-	// Thread.sleep(5000L);
 		
 	// Cancel the task
 	public void stop() {
+	
+		logger.info("stopping the fetch data process");
 		scheduledFuture.cancel(false); // used to be false
-		
-		// scheduledExecutorService.shutdown();
 	}
 }

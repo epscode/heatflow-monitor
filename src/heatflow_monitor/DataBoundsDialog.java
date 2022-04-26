@@ -52,11 +52,6 @@ class DataBoundsDialog extends CenterDialogBox {
 	double depthHighLimit = 0.0; 
 	double probeHighLimit = 0.0; 
 	
-	// double batteryWarnLimit = 0.0;
-	// double tiltWarnLimit = 0.0;
-	// double depthWarnLimit = 0.0;
-	// double probeWarnLimit = 0.0;
-	
 	String tempPath;
 
 	public DataBoundsDialog(JFrame frame, String tempPath) {
@@ -82,11 +77,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		tiltHighLimitField = new JFormattedTextField(formatter);
 		depthHighLimitField = new JFormattedTextField(formatter);
 		probeHighLimitField = new JFormattedTextField(formatter);
-	
-		// batteryWarnLimitField = new JFormattedTextField(formatter);
-		// tiltWarnLimitField = new JFormattedTextField(formatter);
-		// depthWarnLimitField = new JFormattedTextField(formatter);
-		// probeWarnLimitField = new JFormattedTextField(formatter);
 		
 		setBoundsValues();
 	
@@ -109,7 +99,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		gridbag.setConstraints(explaination, c);
 		p.add(explaination);
 		
-		
 		JLabel lowLevelLabel = new JLabel("Low Alarm");
 		c.gridwidth = 1;
 		c.weightx = 0.3;
@@ -124,15 +113,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		c.gridy = 1;
 		gridbag.setConstraints(highLevelLabel, c);
 		p.add(highLevelLabel);
-		
-		/*
-		JLabel WarningLevelLabel = new JLabel("WARNING");
-		c.weightx = 0.2;
-		c.gridx = 3;
-		c.gridy = 0;
-		gridbag.setConstraints(WarningLevelLabel, c);
-		p.add(WarningLevelLabel);
-		*/
 		
 		JLabel batteryLabel = new JLabel("Battery Limits(v)");
 		c.weightx = 0.4;
@@ -152,14 +132,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		c.gridy = 2;
 		gridbag.setConstraints(batteryHighLimitField, c);
 		p.add(batteryHighLimitField);
-		
-		/*
-		c.weightx = 0.2;
-		c.gridx = 3;
-		c.gridy = 1;
-		gridbag.setConstraints(batteryWarnLimitField, c);
-		p.add(batteryWarnLimitField);
-		*/
 
 		JLabel tiltLabel = new JLabel("Tilt Limits (C)");
 		c.weightx = 0.4;
@@ -180,14 +152,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		gridbag.setConstraints(tiltHighLimitField, c);
 		p.add(tiltHighLimitField);
 		
-		/*
-		c.weightx = 0.2;
-		c.gridx = 3;
-		c.gridy = 2;
-		gridbag.setConstraints(tiltWarnLimitField, c);
-		p.add(tiltWarnLimitField);
-		*/
-		
 		JLabel depthLabel = new JLabel("Depth Limits (m)");
 		c.weightx = 0.4;
 		c.gridx = 0;
@@ -206,14 +170,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		c.gridy = 4;
 		gridbag.setConstraints(depthHighLimitField, c);
 		p.add(depthHighLimitField);
-		
-		/*
-		c.weightx = 0.2;
-		c.gridx = 3;
-		c.gridy = 3;
-		gridbag.setConstraints(depthWarnLimitField, c);
-		p.add(depthWarnLimitField);
-		*/
 
 		JLabel probeLabel = new JLabel("Probe Temperature Limits (C)");
 		c.weightx = 0.4;
@@ -233,14 +189,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		c.gridy = 5;
 		gridbag.setConstraints(probeHighLimitField, c);
 		p.add(probeHighLimitField);
-		
-		/*
-		c.weightx = 0.2;
-		c.gridx = 3;
-		c.gridy = 4;
-		gridbag.setConstraints(probeWarnLimitField, c);
-		p.add(probeWarnLimitField);
-		*/
 
 		// layout for the button panel
 		GridBagLayout gridbagButton = new GridBagLayout();
@@ -291,7 +239,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		// setBoundsValues();
 
 		setVisible(true);
-
 	}
 
 	public void okButton_actionPerformed(ActionEvent event) {
@@ -308,11 +255,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		
 		logger.info("probeHighLimit from dialog: " + probeHighLimit);
 		
-		// double batteryWarnLimit = new Double(batteryWarnLimitField.getText()).doubleValue();
-		// double tiltWarnLimit = new Double(tiltWarnLimitField.getText()).doubleValue();
-		// double depthWarnLimit = new Double(depthWarnLimitField.getText()).doubleValue();
-		// double probeWarnLimit = new Double(probeWarnLimitField.getText()).doubleValue();
-		
 		DataBounds.batteryLowLimit = batteryLowLimit;
 		DataBounds.tiltLowLimit = tiltLowLimit;
 		DataBounds.depthLowLimit = depthLowLimit;
@@ -322,11 +264,6 @@ class DataBoundsDialog extends CenterDialogBox {
 		DataBounds.tiltHighLimit = tiltHighLimit;
 		DataBounds.depthHighLimit = depthHighLimit;
 		DataBounds.probeHighLimit = probeHighLimit;
-		
-		// DataBounds.batteryWarnLimit = batteryWarnLimit;
-		// DataBounds.tiltWarnLimit = tiltWarnLimit;
-		// DataBounds.depthWarnLimit = depthWarnLimit;
-		// DataBounds.probeWarnLimit = probeWarnLimit;
 		
 		DataBounds.writeBoundsFile(tempPath);
 		
@@ -355,10 +292,5 @@ class DataBoundsDialog extends CenterDialogBox {
 		tiltHighLimitField.setValue(DataBounds.getTiltHighLimit() );
 		depthHighLimitField.setValue(DataBounds.getDepthHighLimit() );
 		probeHighLimitField.setValue(DataBounds.probeHighLimit);
-	
-		// batteryWarnLimitField.setValue(DataBounds.getBatteryWarnLimit() );
-		// tiltWarnLimitField.setValue(DataBounds.getTiltWarnLimit() );
-		// depthWarnLimitField.setValue(DataBounds.getDepthWarnLimit() );
-		// probeWarnLimitField.setValue(DataBounds.getProbeWarnLimit() );
 	}
 }
